@@ -12,7 +12,7 @@ echo "Installing Python3-PIP" $'\n'
 sudo apt-get install python3-pip
 
 
-## Git
+## Git - todo: remember login
 
 function blank_line {
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
@@ -44,7 +44,6 @@ git config --global user.email "$git_email_id"
 blank_line
 
 
-
 ## Install ROS Melodic - http://wiki.ros.org/melodic/Installation/Ubuntu
 # First add the ROS repository by going to "Software and Updates" in Applications, making sure that the four checkboxes in Ubuntu Software are ticked and that Canonical Partners is enabled in Other Software
 
@@ -74,6 +73,32 @@ source ~/.bashrc
 sudo apt-get install python-rosinstall -y
 
 
+## Terminator 
+
+echo "Installing Terminator" $'\n'
+sudo add-apt-repository ppa:gnome-terminator
+sudo apt-get update
+sudo apt-get install terminator
+
+## VS Code
+
+#You need to enable package repository in your system. Create a new file 
+
+sudo touch /etc/apt/sources.list.d/vscode.list
+#echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
+echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+
+
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+
+sudo apt-get update
+sudo apt-get install code
+
+
+
+
+
 ### Optional things. 
 
 
@@ -86,13 +111,33 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 #sudo apt-get update
 
-
-
 ## Vim
+
+sudo apt-get update
+
+# setup VIM
+echo "Installing vim" $'\n'
+sudo apt-get install vim -y
+
+# Blank Line
+blank_line
 
 ## zsh 
 
-## Terminator 
+# Blank Line
+blank_line
+
+# setup oh-my-zsh
+# echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
+# sudo apt install curl
+# sudo apt-get install zsh -y
+# sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed "s/env zsh//g")"
+# chsh -s $(which zsh)
+
+# Blank Line
+blank_line
+
+
 
 ## CI computer? 
 
@@ -107,4 +152,22 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 
 ### Other personal preferences such as Atom, Chrome, etc.
+
+# Blank Line
+blank_line
+
+# setup Chromium
+echo "Installing Chromium Browser" $'\n'
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+rm -rf google-chrome-stable_current_amd64.deb
+
+echo "In case an error is encountered in above step, run `sudo apt-get -f install`"
+
+# Blank Line
+blank_line
+
+
+echo "Installation of all basic softwares and packages successful!"
+echo "It is recommended that you restart your computer and start afresh."
 
