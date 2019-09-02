@@ -51,7 +51,18 @@ blank_line
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-sudo apt install ros-melodic-desktop-full
+
+# sometimes dependencies are not met. Then run sudo apt --fix-broken install
+
+{ # try
+
+    sudo apt install ros-melodic-desktop-full
+
+} || { # catch
+    sudo apt --fix-broken install 
+    sudo apt install ros-melodic-desktop-full
+}
+
 
 sudo rosdep init
 rosdep update
@@ -71,6 +82,8 @@ sudo apt-get install python-rosinstall -y
 # You will need to add the osrfoundation repo to your Linux package system in order to get the new packages of Gazebo.
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" /etc/apt/sources.list.d/gazebo-stable.list'
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+
+
 #sudo apt-get update
 
 
@@ -86,6 +99,11 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 # Jenkins
 
 # Matlab
+
+# Slack
+
+# wget https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.2-amd64.deb
+# sudo apt install ./slack-desktop-*.deb
 
 
 ### Other personal preferences such as Atom, Chrome, etc.
