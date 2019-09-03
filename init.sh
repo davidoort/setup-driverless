@@ -19,6 +19,7 @@ function blank_line {
     echo $'\n'
 }
 
+:'
 echo -e "Enter your github user.name: "
 read git_username
 
@@ -42,7 +43,7 @@ git config --global user.email "$git_email_id"
 
 # Blank Line
 blank_line
-
+'
 
 ## Install ROS Melodic - http://wiki.ros.org/melodic/Installation/Ubuntu
 # First add the ROS repository by going to "Software and Updates" in Applications, making sure that the four checkboxes in Ubuntu Software are ticked and that Canonical Partners is enabled in Other Software
