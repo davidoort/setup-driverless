@@ -3,13 +3,13 @@
 sudo apt-get update
 
 ## Install Docker
-sudo apt-get install docker.io docker-compose
+sudo apt-get install docker.io docker-compose -y
 
 
 ## Setup Python3 PIP
 
 echo "Installing Python3-PIP" $'\n'
-sudo apt-get install python3-pip
+sudo apt-get install python3-pip -y
 
 
 ## Git - todo: remember login
@@ -79,7 +79,7 @@ sudo apt-get install python-rosinstall -y
 echo "Installing Terminator" $'\n'
 sudo add-apt-repository ppa:gnome-terminator
 sudo apt-get update
-sudo apt-get install terminator
+sudo apt-get install terminator -y
 
 ## VS Code
 
@@ -94,7 +94,7 @@ curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microso
 sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
 
 sudo apt-get update
-sudo apt-get install code
+sudo apt-get install code -y
 
 
 
