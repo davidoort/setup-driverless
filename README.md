@@ -47,6 +47,7 @@ Get a USB and put an Ubuntu image on it. Options:
 
 Very simple. Open a terminal and run the following commands (*this information is specific to your case*):
 
+	$ sudo apt-get update
 	$ sudo apt-get install git -y
 	$ git config --global user.name "*git_username*"
 	$ git config --global user.email "*git_email_id*"
