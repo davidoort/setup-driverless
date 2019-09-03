@@ -1,4 +1,11 @@
 #!/bin/bash
+set -e
+set -x
+
+function blank_line {
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    echo $'\n'
+}
 
 sudo apt-get update
 
@@ -12,14 +19,9 @@ echo "Installing Python3-PIP" $'\n'
 sudo apt-get install python3-pip -y
 
 
-## Git - todo: remember login
-
-function blank_line {
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    echo $'\n'
-}
-
 :'
+
+## Git - todo: remember login
 echo -e "Enter your github user.name: "
 read git_username
 
@@ -128,15 +130,32 @@ blank_line
 # Blank Line
 blank_line
 
-# setup oh-my-zsh
-# echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
-# sudo apt install curl
-# sudo apt-get install zsh -y
-# sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed "s/env zsh//g")"
-# chsh -s $(which zsh)
+setup oh-my-zsh
+echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
+sudo apt install curl
+sudo apt-get install zsh -y
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed "s/env zsh//g")"
+chsh -s $(which zsh)
 
 # Blank Line
 blank_line
+
+
+# GitKraken
+
+wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+
+# sometimes dependencies are not met. Then run sudo apt --fix-broken install
+
+{ # try
+
+    sudo dpkg -i gitkraken-amd64.deb
+
+} || { # catch
+    # sudo apt-get install gconf2 gconf-service
+    apt --fix-broken install
+    sudo dpkg -i gitkraken-amd64.deb
+}
 
 
 
@@ -148,8 +167,8 @@ blank_line
 
 # Slack
 
-# wget https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.2-amd64.deb
-# sudo apt install ./slack-desktop-*.deb
+wget https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.2-amd64.deb
+sudo apt install ./slack-desktop-*.deb
 
 
 ### Other personal preferences such as Atom, Chrome, etc.
