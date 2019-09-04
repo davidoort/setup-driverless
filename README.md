@@ -61,7 +61,7 @@ Then add your newly generated SSH key to the ssh-agent.
 	
 Finally, add your public SSH key to your github account. Run the following command and copy the content. This is your public SSH key, which start with 'ssh-rsa' and ends with your email adress.
 
-	$ cat ~/.ssh/id_ras.pub
+	$ cat ~/.ssh/id_rsa.pub
 	
 Now go to github > settings > SSH and GPG keys > new SSH key. Paste your public SSH here and hit 'Add SSH key'. Now you're ready to clone the repository.
 
