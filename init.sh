@@ -126,7 +126,7 @@ wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
 
 } || { # catch
     # sudo apt-get install gconf2 gconf-service
-    apt --fix-broken install
+    sudo apt --fix-broken install
     sudo dpkg -i gitkraken-amd64.deb
 }
 
