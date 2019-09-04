@@ -98,20 +98,6 @@ sudo apt-get install vim -y
 # Blank Line
 blank_line
 
-## zsh 
-
-# Blank Line
-blank_line
-
-#setup oh-my-zsh
-echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
-sudo apt install curl
-sudo apt-get install zsh -y
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed "s/env zsh//g")"
-chsh -s $(which zsh)
-
-# Blank Line
-blank_line
 
 
 # GitKraken
@@ -160,6 +146,21 @@ echo "In case an error is encountered in above step, run `sudo apt-get -f instal
 # Blank Line
 blank_line
 
+
+## zsh 
+
+# Blank Line
+blank_line
+
+#setup oh-my-zsh
+echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
+sudo apt install curl
+sudo apt-get install zsh -y
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed "s/env zsh//g")"
+chsh -s $(which zsh)
+
+# Blank Line
+blank_line
 
 echo "Installation of all basic softwares and packages successful!"
 echo "It is recommended that you restart your computer and start afresh."
