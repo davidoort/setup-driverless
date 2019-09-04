@@ -103,7 +103,7 @@ blank_line
 # Blank Line
 blank_line
 
-setup oh-my-zsh
+#setup oh-my-zsh
 echo "Installing oh-my-zsh (https://github.com/robbyrussell/oh-my-zsh)" $'\n'
 sudo apt install curl
 sudo apt-get install zsh -y
