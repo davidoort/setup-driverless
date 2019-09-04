@@ -4,7 +4,9 @@
 
 ### Setup Linux (dual-boot)
 
-#### On a machine with GPU
+
+#### On a machine with natively-supported GPU
+
 
 1. **Windows**: Get a USB and put an Ubuntu image on it. Options:
 
@@ -35,7 +37,7 @@
 	g. **Ubuntu** If it doesn’t freeze then check under Settings->Details that the correct graphics card is being used and not just the CPU.
 
 
-#### On a machine without GPU (such as the office desktops)
+#### On a machine without natively-supported GPU (such as the office desktops)
 
 1. Get a USB and put an Ubuntu image on it. Options:
 		
@@ -55,12 +57,12 @@
 
 ### Setup applications and packages
 
-Very simple. Open a terminal and run the following commands (*this information is specific to your case*):
+Open a terminal and run the following commands. Make sure you replace `github_username` and `github_email` with your personal details. 
 
 	$ sudo apt-get update
 	$ sudo apt-get install git -y
-	$ git config --global user.name "*git_username*"
-	$ git config --global user.email "*git_email_id*"
+	$ git config --global user.name "github_username"
+	$ git config --global user.email "github_email"
 
 	$ mkdir git
 	$ cd git
@@ -72,6 +74,7 @@ Now
 	$ bash git/setup-driverless/init.sh
 
 The installation process should begin. You will have to press enter a few times and write your computer password.
+
 
 Once you are done, depending on whether you have certain parts of the ```init.sh``` commented out or not, you should be able to open/run the following applications:
 
@@ -89,28 +92,45 @@ Once you are done, depending on whether you have certain parts of the ```init.sh
 * Chrome
 * More might be added...
 
+### Communicate with the car
 
-#### On a computer to be used for Jenkins
+## Jenkins Server installation
+1. Install ubuntu (minimal install is fine)
+2. Install all updates, then disable automatic updates (we don't want the machine to update and break while in competition season)
+3. Setup SSH access. Make sure you disable root-login and only allow private-key-authentication!
+4. Install docker and docker-compose: `sudo apt-get install docker.io docker-compose`
+5. Download and install MathWorks from https://nl.mathworks.com/downloads/web_downloads/download_release?release=R2019a Use your personal license key to get it activated. You must do this installation with a screen and keyboard to let the gui work.
+6. Save the following content to a file named `docker-compose.yml`.
+```
+version: '3'
+services:
+  jenkins:
+    image: jenkinsci/blueocean
+    ports:
+      - "54321:8080"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/jenkins_home/:/var/jenkins_home/
+    environment:
+      - "TRY_UPGRADE_IF_NO_MARKER=true"
+```
+Run: `mkdir /var/jenkins_home` to create the data directory for jenkins en run `sudo docker-compose up -d` to startup jenkins.
+Jenkins (within the container) must run as root user to make sure the jenkins can write to the parent filesystem. 
 
-TODO: Sijmen
+For the actual tests there were several issues.
+* While preparing to build or test, mbed looks for (the folder .local/share in) the user's home directory. In the docker container, this is not properly defined so we need to pass the environment variable XDG_DATA_HOME into the container.
+* The hardware devices for the boards need to be accessible in the container. Specifically, foreach board we need the usb drive used to flash the device, and the serial device to retrieve test results. Further, mbed looks for the symlinks to these devices in  /dev/disk/by-id/ and/dev/serial/by-id which it then explicitly dereferences. Passing devices into a container can be done by specifying --device=/dev/something:/dev/somethingelse aDer which the device/dev/something on the host is accessible under /dev/somethingelse in the container. Unfortunately, this does not work for the symlinks in disk/by-id. Further, manually adding the symlinks in the Dockerfile does not work since the /dev/ folder is managed by the OS and gets reset (on boot? at some point anyway). In the end I used a rather dirty fix, and just passed the entire /dev folder into the container. This is probably dangerous, but as long as we don't touch the server it should be ok. There is probably a better solution for this.
+* Once the container has access to the devices, mbed requires that the usb drive is actually mounted. This does not happen automatically (at least on the default ubuntu:xenial containerI used. Mounting in the Dockerfile is not possible, so it needs to be done as part of the Jenkins build. Unfortunately, this requires that we run the build as root (or allow regular users to mount drives, which means they can just mount any drive with permissions set such that they get full access anyways). Could probably set up mounting somehow, but due to time constraints I took the lazy way out.
 
+Right now the server works, but its not very robust. It assumes a specific device is attached, and has received a specific device name in /dev/. This means that unplugging the device or rebooting the server might result in the CI server breaking. Also, the Jenkins web interface is currently exposed to the internet.
 
-## Communicate with the car
+### Re-install jenkins
+If all jenkins-data is somehow lost, that is a bit annoying but not a disaster. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+All build-configuration is stored in the corresponding git repositories in `Jenkinsfile`s. 
+So if you manage to make jenkins love github, and the other way around, you are all set.
+There is a github-account (named `DUT-Builder`) that should be configured in a new item within Jenkins (choose 'github organization template'). Ask Sijmen for the password.
+Next, you could setup github login. Use the following tutorial: https://wiki.jenkins.io/display/JENKINS/GitHub+OAuth+Plugin
+Make sure you setup authorisation groups to prevent that every github user in the world can use our jenkins!
 
