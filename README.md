@@ -72,7 +72,7 @@ Now go to github > settings > SSH and GPG keys > new SSH key. Paste your public 
 
 Now
 
-	$ cd setup-driverless
+	$ cd
 	$ bash git/setup-driverless/init.sh
 
 The installation process should begin. You will have to press enter a few times and write your computer password.
