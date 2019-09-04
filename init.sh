@@ -19,34 +19,6 @@ echo "Installing Python3-PIP" $'\n'
 sudo apt-get install python3-pip -y
 
 
-:'
-
-## Git - todo: remember login
-echo -e "Enter your github user.name: "
-read git_username
-
-echo -e "Enter your github email.id: "
-read git_email_id
-
-# Blank Line
-blank_line
-
-echo "Thank you for entering your information!" $'\n'
-read -p "Press enter to continue: "
-
-# Blank Line
-blank_line
-
-# setup git
-echo "Installing git" $'\n'
-sudo apt-get install git -y
-git config --global user.name "$git_username"
-git config --global user.email "$git_email_id"
-
-# Blank Line
-blank_line
-'
-
 ## Install ROS Melodic - http://wiki.ros.org/melodic/Installation/Ubuntu
 # First add the ROS repository by going to "Software and Updates" in Applications, making sure that the four checkboxes in Ubuntu Software are ticked and that Canonical Partners is enabled in Other Software
 
@@ -80,7 +52,7 @@ sudo apt-get install python-rosinstall -y
 ## Terminator 
 
 echo "Installing Terminator" $'\n'
-sudo add-apt-repository ppa:gnome-terminator
+#sudo add-apt-repository ppa:gnome-terminator
 sudo apt-get update
 sudo apt-get install terminator -y
 

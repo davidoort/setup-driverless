@@ -84,7 +84,9 @@ Now go to github > settings > SSH and GPG keys > new SSH key. Paste your public 
 	$ cd git
 	$ git clone git@github.com:davidoort/setup-driverless.git
 
-Now
+Now, you need to ENABLE ROS REPOSITORIES. Go to the Software and Updates application on ubuntu and Other Software. Click on Canonical Partners!
+
+Then go to the terminal and run:
 
 	$ cd
 	$ bash git/setup-driverless/init.sh
