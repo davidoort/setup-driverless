@@ -151,3 +151,5 @@ So if you manage to make jenkins love github, and the other way around, you are 
 There is a github-account (named `DUT-Builder`) that should be configured in a new item within Jenkins (choose 'github organization template'). Ask Sijmen for the password.
 Next, you could setup github login. Use the following tutorial: https://wiki.jenkins.io/display/JENKINS/GitHub+OAuth+Plugin
 Make sure you setup authorisation groups to prevent that every github user in the world can use our jenkins!
+The SSH-private key of DUT-Builder is must be in a credential named 
+If you change the url, dont forget to update this place: https://github.com/organizations/DUT-Racing/settings/applications/1126788
