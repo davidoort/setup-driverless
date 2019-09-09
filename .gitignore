@@ -1,0 +1,12 @@
+*~
+
+# Emacs
+.#*
+
+# Jetbrains stuff
+.idea
+*.iml
+
+# Eclipse stuff
+.project
+.cproject
