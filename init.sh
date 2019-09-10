@@ -62,6 +62,8 @@ sudo apt-get install python-rosinstall -y
 
 
 sudo apt-get update
+sudo apt-get install python-catkin-tools
+
 
 ## Gazebo
 
