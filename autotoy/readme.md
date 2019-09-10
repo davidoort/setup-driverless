@@ -145,7 +145,7 @@ Now it waits for messages on the `/car/controls` topic.
 When a control command is received the car will be moved accordingly.
 
 ## Development
-To test the software being developed first run the following command `echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc`. In a new terminal, navigate to the catkin workspace (this folder) and build the project with `catkin_make`.
+To test the software being developed first run `echo "source <dir-of-autotoy>/devel/setup.bash" >> ~/.bashrc`. In a new terminal, navigate to the catkin workspace (this folder) and build the project with `catkin_make`.
 
 ## Running
 To run the project, start a ROS Master and run every node. Start the simulator last. Each should be started from a separate console:
