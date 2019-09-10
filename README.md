@@ -91,20 +91,19 @@ Then go to the terminal and run:
 	$ cd
 	$ bash git/setup-driverless/init.sh
 
-The installation process should begin. You will have to press enter a few times and write your computer password.
+The installation process should begin. The `init.sh` file will install the following by default:
 
-
-Once you are done, depending on whether you have certain parts of the ```init.sh``` commented out or not, you should be able to open/run the following applications:
-
-* Git
 * Docker
 * Python 3
 * ROS Melodic (including C++ compilers)
 * Gazebo
+* Visual Studio Code (for helping each other out, it will be extremely useful to use the same IDE)
+
+You will additionally be prompted to install the following optional (and recommended) applications:
+
 * Terminator
 * Vim
 * Zsh
-* Visual Studio Code 
 * Slack Desktop
 * GitKraken
 * Chrome
