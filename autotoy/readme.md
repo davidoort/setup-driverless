@@ -39,8 +39,8 @@ This information should be enough to implement each node independently.
 *track/Point.msg*
 Values are in meters.
 ```
-int8 x
-int8 y
+float32 x
+float32 y
 ```
 
 *track/Cones.msg*
