@@ -1,3 +1,3 @@
-track/Point[] centreline
-track/Point[] leftcones
-track/Point[] rightcones
+track/Line centreline
+track/Cones leftcones
+track/Cones rightcones

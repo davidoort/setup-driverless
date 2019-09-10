@@ -1,6 +1,3 @@
-int8 tracklength
-Point start
+
 ---
-track/Point[] centreline
-track/Point[] leftcones
-track/Point[] rightcones
+track/Track track

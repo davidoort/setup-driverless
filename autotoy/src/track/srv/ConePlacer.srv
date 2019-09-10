@@ -1,4 +1,4 @@
-track/Point[] route
+track/Line centreline
 ---
-track/Point[] leftcones
-track/Point[] rightcones
+track/Cones leftcones
+track/Cones rightcones

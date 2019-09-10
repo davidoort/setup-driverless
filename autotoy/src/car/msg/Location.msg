@@ -1,2 +1,2 @@
 track/Point location
-int8 rotation
+float32 heading
