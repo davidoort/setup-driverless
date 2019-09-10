@@ -109,7 +109,6 @@ You will additionally be prompted to install the following optional (and recomme
 * Chrome
 * More might be added...
 
-### Communicate with the car
 
 ## Jenkins Server installation
 1. Install ubuntu (minimal install is fine)
