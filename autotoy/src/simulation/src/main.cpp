@@ -9,7 +9,7 @@ int main(int argc, char **argv)
   ros::ServiceClient client = n.serviceClient<track::Generator>("/track/generate");
   track::Generator srv;
   if (client.call(srv)){
-    ROS_INFO("Track start point: %ld;%ld", srv.response.track.centreline.points[0].x, srv.response.track.centreline.points[0].y);
+    ROS_INFO("Track start point: %f;%f", srv.response.track.centreline.points[0].x, srv.response.track.centreline.points[0].y);
   }
   else
   {
