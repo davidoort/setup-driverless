@@ -1,13 +1,3 @@
-//
-// Camera Simulator Publisher 
-// author: Pietro Campolucci
-// funtion: the code gathers the location of the car
-// and of the cones and publishes the recognized cones
-//
-
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "std_msgs/Int32MultiArray.h"
 #include <math.h>
 #include <sstream>
 
@@ -55,23 +45,6 @@ int main(int argc, char **argv)
     position = std::make_pair (50, 50);
     dut.get_orientation(angle, position);
     dut.project(fov, angle, dof, acc);
+    return 0
 
-    ros::init(argc, argv, "camerasimulator");
-    ros::NodeHandle n;
-    ros::Publisher chatter_pub = n.advertise<std_msgs::Int8>("chatter", 1000); // here we specify the nature of the topic and its name
-    ros::Rate loop_rate(10);
-
-    int count = 0;
-    while (ros::ok())
-    {
-        std_msgs::Int8 msg;
-        msg.data = 2;
-        ROS_INFO("%d", msg.data);
-        chatter_pub.publish(msg); // actual broadcast message of the datum 
-        ros::spinOnce();
-        loop_rate.sleep();
-        ++count;
-    }
-
-    return 0;
 }
