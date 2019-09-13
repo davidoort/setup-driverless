@@ -39,7 +39,7 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+INCLUDE_DIRS include
 #  LIBRARIES track
 CATKIN_DEPENDS roscpp std_msgs message_runtime
 #  DEPENDS system_lib
@@ -52,7 +52,7 @@ CATKIN_DEPENDS roscpp std_msgs message_runtime
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -61,3 +61,4 @@ target_link_libraries(generator ${catkin_LIBRARIES})
 
 add_executable(coneplacer src/coneplacer.cpp)
 target_link_libraries(coneplacer ${catkin_LIBRARIES})
+
