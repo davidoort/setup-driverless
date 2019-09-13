@@ -43,8 +43,8 @@ void  conePlacer(const track::Line &centreline, const float conedistance, ConesI
 
     else if(i == length-1) //final point
     {
-      direction[0] = centreline.points[length].x - centreline.points[length-1].x; //change in x
-      direction[1] = centreline.points[length].y - centreline.points[length-1].y; //change in y
+      direction[0] = centreline.points[length-1].x - centreline.points[length-2].x; //change in x
+      direction[1] = centreline.points[length-1].y - centreline.points[length-2].y; //change in y
     }
 
     else //middle point
