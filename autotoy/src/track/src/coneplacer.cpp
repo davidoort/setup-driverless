@@ -62,7 +62,7 @@ void  conePlacer(const track::Line &centreline, const float conedistance, ConesI
     leftpoint->y = (float)(centreline.points[i].y + leftconedirection[1]*conedistance);
 
     rightpoint->x = (float)(centreline.points[i].x - leftconedirection[0]*conedistance); // push x,y points of right cone to temporary point object holder
-    rightpoint->y = (float)(centreline.points[i].x - leftconedirection[1]*conedistance);
+    rightpoint->y = (float)(centreline.points[i].y - leftconedirection[1]*conedistance);
     
 
     conesobj.leftcones.cones.push_back(*leftpoint); //append leftpoint to cones obj
