@@ -32,7 +32,7 @@ void  conePlacer(const track::Line &centreline, const float conedistance, ConesI
   track::Point* leftpoint = new track::Point; // to store temporary point for left cones
   track::Point* rightpoint = new track::Point; // to store temporary point for right cones
 
-  for(int i = 1; i < length; i++)
+  for(int i = 0; i < length; i++)
   {
     // check if at beginning, middle, or end of the array
     if(i == 0) //first point
