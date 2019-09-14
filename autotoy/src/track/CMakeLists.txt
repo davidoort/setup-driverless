@@ -27,7 +27,6 @@ add_message_files(
   FILES
   Cone.msg
   Cones.msg
-  HorizontalDirection.msg
   Line.msg
   Point.msg
   Track.msg
