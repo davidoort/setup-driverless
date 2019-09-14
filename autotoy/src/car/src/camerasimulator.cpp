@@ -18,9 +18,9 @@ class car
 public: //variables
     std::pair <std_msgs::Float32,std_msgs::Float32> position;
     float nose_x;
-    float nose_y;
-    float tail_x;
-    float tail_y;
+    _Float32 nose_y;
+    _Float32 tail_x;
+    _Float32 tail_y;
     int cones_seen;
 
     float get_orientation(float angle, std::pair <float,float> position)
@@ -67,8 +67,11 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         track::Point msg;
+        // std::pair <float,float> pos;
         msg.x, msg.y = dut.get_orientation(angle, position);
-        ROS_INFO_STREAM(" x =" << msg.x << " y = " << msg.y);
+        //msg.x = pos[0];
+        //msg.y = pos[1];
+        ROS_INFO_STREAM(" x =" << msg.x << "y = " << msg.y);
         chatter_pub.publish(msg); // actual broadcast message of the datum 
         ros::spinOnce();
         loop_rate.sleep();
