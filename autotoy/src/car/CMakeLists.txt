@@ -13,6 +13,7 @@ find_package(
   roscpp
   track
 )
+find_package(OpenCV 3 REQUIRED)
 
 # ----- MESSAGE DEPENDENCIES -----
 # Specify internal message dependencies
@@ -42,7 +43,10 @@ catkin_package(
 # ----- BUILD -----
 # Specifies additional locations of header files
 # See https://cmake.org/cmake/help/v3.0/command/include_directories.html
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+)
 
 # Make camerasimulator.cpp into an executable (which creates a node)
 add_executable(camerasimulator src/camerasimulator.cpp)
@@ -55,3 +59,4 @@ target_link_libraries(controller ${catkin_LIBRARIES})
 # Make trackfinder.cpp into an executable (which creates a node)
 add_executable(trackfinder src/trackfinder.cpp)
 target_link_libraries(trackfinder ${catkin_LIBRARIES})
+target_link_libraries(trackfinder ${OpenCV_LIBS})
