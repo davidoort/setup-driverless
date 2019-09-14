@@ -109,6 +109,18 @@ You will additionally be prompted to install the following optional (and recomme
 * Chrome
 * More might be added...
 
+In VS Code, it is recommended to add the following extensions:
+* Microsoft C/C++ 
+* Microsoft Python 
+* twxs CMake 
+* Microsoft Docker 
+* Microsoft ROS
+
+Additionally, inside of VS Code, press `Ctrl`+`Shift`+`P` and search for C/C++ Edit Configurations (UI). In the section called *Include path* add the following:
+
+``/opt/ros/melodic/include
+${workspaceFolder}/**``
+
 
 ## Jenkins Server installation
 1. Install ubuntu (minimal install is fine)
