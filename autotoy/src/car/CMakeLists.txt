@@ -5,11 +5,13 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   message_generation
+  track
 )
 
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
+  # INFO: All local message files for which you want to create .h files for
   Location.msg
   Control.msg
 )
@@ -17,6 +19,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
+  # INFO: All external packages of which you want to use msg files from
   std_msgs
   track
 )
@@ -31,10 +34,10 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES car
-CATKIN_DEPENDS roscpp std_msgs message_runtime
-#  DEPENDS system_lib
+  #  INCLUDE_DIRS include
+  #  LIBRARIES car
+  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  #  DEPENDS system_lib
 )
 
 ###########
@@ -55,4 +58,5 @@ add_executable(controller src/controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
 
 add_executable(trackfinder src/trackfinder.cpp)
+add_dependencies(trackfinder ${catkin_EXPORTED_TARGETS})
 target_link_libraries(trackfinder ${catkin_LIBRARIES})
