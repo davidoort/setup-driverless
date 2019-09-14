@@ -53,57 +53,37 @@ class TrackMap {
 };
 
 
-bool gen_track(car::trackfinder::Request &req,''
+bool handle_new_cone(car::trackfinder::Request &req,''
                car::trackfinder::Response &res)
 {
-  std::vector<track::Cones> seen_cones = req.cones;
-
-
-
-  std::vector<track::Cones> yellow_cones;
-  std::vector<track::Cones> right_cones;
-  std::vector<track::Cones> orange_cones;
-
-  int size = sizeof(observed_cones) / sizeof(observed_cones[0]);
-
-  if size
-
-  for(int i=0; i < size; i++){
-    if (observed_cones[i] == Cones::yellow) {
-
-    } else if (observed_cones[i] == Cones::blue) {
-
-    } else if (observed_cones[i] == Cones::orange) {
-
-    }
-
-  }
 
   return true;
 }
 
 
 int main(int argc, char **argv) {
+
+  TrackMap track_map;
+
   // Init node with name 'trackfinder'
   ros::init(argc, argv, "trackfinder");
 
   ros::NodeHandle n;
   ros::Publisher send_track = n.advertise<track::Point>("/car/targetline", 1000);
-  ros::Subscriber camera_input = n.subscribe("/track/camera", 1000, handle_new_cone);
+  ros::Subscriber camera_input = n.subscribe("/track/camera", 1000, track_map.handle_new_cone);
 
 
   ros::Rate loop_rate(10);
 
-  int count = 0;
   while (ros::ok())
   {
     track::Line msg;
     chatter_pub.publish(msg);
 
-    ros::spinOnce();
 
+
+    ros::spinOnce();
     loop_rate.sleep();
-    ++count;
   }
 
 
