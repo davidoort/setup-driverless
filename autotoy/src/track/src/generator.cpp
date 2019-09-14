@@ -1,20 +1,16 @@
 #include "ros/ros.h"
 #include "track/Generator.h"
 #include "track/ConePlacer.h"
-#include "track/Track.h"
-
-
-ros::NodeHandle n;
 
 /* This script defines the functionality of the generator node which in essence 
 creates a client which requests a service to conesplacer by passing as request a generated centerline 
 and then creates a response which is sent to Simulator as part of the Generator service it provides.
 */
 
+ros::NodeHandle n;
 
-// For now the service is just a returned string (with ROS_OUT), next I can try doing something like track::Track generate_track(){} -> I don't think anything other than bool works
 
-bool generate_track(track::Generator::Request& req, track::Generator::Response& res)
+bool generate_track(track::Generator::Request& req, track::Generator::Response& res) //always has to be a bool
 {
   //track::Line centerline = track::Point[3];
   //std::vector<track::Point> centerline
@@ -63,8 +59,6 @@ bool generate_track(track::Generator::Request& req, track::Generator::Response& 
     return false;
   }
   
-
-
 }
 
 
