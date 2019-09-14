@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "test_svm");
 
   ros::NodeHandle n;
-  ros::Publisher send_track = n.advertise<track::Cones>("/car/camera", 1000);
+  ros::Publisher send_track = n.advertise<track::Cones>("/car/cameratest", 1000);
 
 
   int num_points = 10;

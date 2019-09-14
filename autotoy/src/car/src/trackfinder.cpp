@@ -27,7 +27,7 @@ public:
 
   void start() {
     // Start listening on the '/car/camera' topic
-    subscriber = nodeHandle.subscribe("/car/camera", 1000, &TrackFinder::didReceiveCones, this);
+    subscriber = nodeHandle.subscribe("/car/cameratest", 1000, &TrackFinder::didReceiveCones, this);
   }
 
   void didReceiveCones(const track::Cones::ConstPtr& cones) {
@@ -49,8 +49,7 @@ public:
     float seen_cones_x[n_cones];
     float seen_cones_y[n_cones];
 
-    for (int i=0; i<n_cones; i++)
-    {
+    for (int i=0; i<n_cones; i++) {
       seen_cones_color[i] = visibleCones[i].color;
       seen_cones_coords[i][0] = visibleCones[i].position.x;
       seen_cones_coords[i][1] = visibleCones[i].position.y;
@@ -89,9 +88,8 @@ public:
     int prediction, prev_prediction;
 
     // Fill matrix with classification
-    for (int i = 1; i < y_max; i++)     // loop through rows, omit first entry
-    {
-      for (int j = 0; j < x_max; j++) // loop through columns, omit first entry
+    for (int i = 1; i < y_max; i++){     // loop through rows, omit first entry
+      for (int j = 0; j < x_max; j++){ // loop through columns, omit first entry
         // {
         //     if (i == 1){
         //         cv::Mat firstSampleMate = (cv::Mat_<float>(1,2) << j-1, i-1);
@@ -109,121 +107,194 @@ public:
         //         pt.y = j;
         //         centerLine.push_back(pt);
         //     }
-        {
-          if (i == 1){
-            initial_guess = 0;
-            x_coord = 0;
-            cv::Mat predict_coord = (cv::Mat_<float>(1,2) << x_coord, y_coord-1);
-            prev_prediction = svm->predict(predict_coord);
 
-            cv::Mat predict_coord = (cv::Mat_<float>(1,2) << x_coord, y_coord);
-            prediction = svm->predict(predict_coord);
+        if (i == 1){
+          initial_guess = 0;
+          x_coord = 0;
+          cv::Mat predict_coord = (cv::Mat_<float>(1,2) << x_coord, y_coord-1);
+          prev_prediction = svm->predict(predict_coord);
 
-          } else {
-            initial_guess = final_guess;
-            x_coord = -(abs(x_coord)+1);     //Start in the center, and move to the sides
-            cv::Mat predict_coord = (cv::Mat_<float>(1,2) << x_coord-1, y_coord-1);
-            prediction = svm->predict(predict_coord);
-          }
-          int y_coord = i;
+          cv::Mat predict_coord2 = (cv::Mat_<float>(1,2) << x_coord, y_coord);
+          prediction = svm->predict(predict_coord2);
 
-          if (prediction == prev_prediction){
-            continue;
-          } else {
-            final_guess = x_coord;
-            track::Point pt;
-            pt.x = x_coord;
-            pt.y = y_coord;
-            centerLine.push_back(pt);
-          }
+        } else {
+          initial_guess = final_guess;
+          x_coord = -(abs(x_coord)+1);     //Start in the center, and move to the sides
+          cv::Mat predict_coord = (cv::Mat_<float>(1,2) << x_coord-1, y_coord-1);
+          prediction = svm->predict(predict_coord);
         }
+        int y_coord = i;
 
-    }
-
-
-    // Data for visual representation
-    int width = 512, height = 512;
-    Mat image = Mat::zeros(height, width, CV_8UC3);
-
-    // Set up training data
-    int labels[6] = { 1, 1, 1, -1, -1, -1 };
-
-    Mat labelsMat(6, 1, CV_32S, labels);
-
-    float trainingData[6][2] = { { 100, 150 }, { 100, 450 }, { 200, 300 }, { 300, 150 }, { 300, 450 }, { 400, 300} };
-    Mat trainingDataMat(6, 2, CV_32FC1, trainingData);
-
-    // Set up SVM's parameters
-    Ptr<SVM> svm = SVM::create();
-    svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::POLY);
-    svm->setDegree(2.0);
-    svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
-
-    // Train the SVM with given parameters
-    Ptr<TrainData> td = TrainData::create(trainingDataMat, ROW_SAMPLE, labelsMat);
-    svm->train(td);
-
-    // Or train the SVM with optimal parameters
-    //svm->trainAuto(td);
-
-    Vec3b green(0, 255, 0), blue(255, 0, 0);
-    // Show the decision regions given by the SVM
-    for (int i = 0; i < image.rows; ++i)
-        for (int j = 0; j < image.cols; ++j)
-        {
-            Mat sampleMat = (Mat_<float>(1, 2) << j, i);
-            float response = svm->predict(sampleMat);
-
-            if (response == 1)
-                image.at<Vec3b>(i, j) = green;
-            else if (response == -1)
-                image.at<Vec3b>(i, j) = blue;
+        if (prediction == prev_prediction){
+          continue;
+        } else {
+          final_guess = x_coord;
+          track::Point pt;
+          pt.x = x_coord;
+          pt.y = y_coord;
+          centerLine.push_back(pt);
         }
-
-    // Show the training data
-    int thickness = -1;
-    int lineType = 8;
-    //circle(image, Point(501, 10), 5, Scalar(0, 0, 0), thickness, lineType);
-    //circle(image, Point(255, 10), 5, Scalar(255, 255, 255), thickness, lineType);
-    //circle(image, Point(501, 255), 5, Scalar(255, 255, 255), thickness, lineType);
-    //circle(image, Point(10, 501), 5, Scalar(255, 255, 255), thickness, lineType);
-
-    // Show support vectors
-    thickness = -1;
-    lineType = 8;
-    Mat sv = svm->getSupportVectors();
-
-    for (int i = 0; i < sv.rows; ++i)
-    {
-
-        ROS_INFO("Drawing circle");
-        const float* v = sv.ptr<float>(i);
-        circle(image, Point((int)v[0], (int)v[1]), 6, Scalar(255, 255, 255), thickness, lineType);
+      }
     }
 
-    ROS_INFO("Stored center line in result.png!");
-
-    imwrite("/var/tmp/opencv-img.png", image);        // save the image
-
-    imshow("SVM Simple Example", image); // show it to the user
-    waitKey(0);
+    
 
 
+    // // Data for visual representation
+    // int width = 512, height = 512;
+    // Mat image = Mat::zeros(height, width, CV_8UC3);
+
+    // // Set up training data
+    // int labels[6] = { 1, 1, 1, -1, -1, -1 };
+
+    // Mat labelsMat(6, 1, CV_32S, labels);
+
+    // float trainingData[6][2] = { { 100, 150 }, { 100, 450 }, { 200, 300 }, { 300, 150 }, { 300, 450 }, { 400, 300} };
+    // Mat trainingDataMat(6, 2, CV_32FC1, trainingData);
+
+    // // Set up SVM's parameters
+    // Ptr<SVM> svm = SVM::create();
+    // svm->setType(SVM::C_SVC);
+    // svm->setKernel(SVM::POLY);
+    // svm->setDegree(2.0);
+    // svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
+
+    // // Train the SVM with given parameters
+    // Ptr<TrainData> td = TrainData::create(trainingDataMat, ROW_SAMPLE, labelsMat);
+    // svm->train(td);
+
+    // // Or train the SVM with optimal parameters
+    // //svm->trainAuto(td);
+
+    // Vec3b green(0, 255, 0), blue(255, 0, 0);
+    // // Show the decision regions given by the SVM
+    // for (int i = 0; i < image.rows; ++i){
+    //     for (int j = 0; j < image.cols; ++j)
+    //     {
+    //         Mat sampleMat = (Mat_<float>(1, 2) << j, i);
+    //         float response = svm->predict(sampleMat);
+
+    //         if (response == 1)
+    //             image.at<Vec3b>(i, j) = green;
+    //         else if (response == -1)
+    //             image.at<Vec3b>(i, j) = blue;
+    //     }
+    // }
+    // // Show the training data
+    // int thickness = -1;
+    // int lineType = 8;
+    // //circle(image, Point(501, 10), 5, Scalar(0, 0, 0), thickness, lineType);
+    // //circle(image, Point(255, 10), 5, Scalar(255, 255, 255), thickness, lineType);
+    // //circle(image, Point(501, 255), 5, Scalar(255, 255, 255), thickness, lineType);
+    // //circle(image, Point(10, 501), 5, Scalar(255, 255, 255), thickness, lineType);
+
+    // // Show support vectors
+    // thickness = -1;
+    // lineType = 8;
+    // Mat sv = svm->getSupportVectors();
+
+    // for (int i = 0; i < sv.rows; ++i)
+    // {
+
+    //     ROS_INFO("Drawing circle");
+    //     const float* v = sv.ptr<float>(i);
+    //     circle(image, Point((int)v[0], (int)v[1]), 6, Scalar(255, 255, 255), thickness, lineType);
+    // }
+
+    //     ROS_INFO("Stored center line in result.png!");
+
+    //     imwrite("/var/tmp/opencv-img.png", image);        // save the image
+
+    //     imshow("SVM Simple Example", image); // show it to the user
+    //     waitKey(0);
+    // //  visual representation
+    //     int width = 512, height = 512;
+    //     Mat image = Mat::zeros(height, width, CV_8UC3);
+
+    //     // Set up training data
+    //     int labels[6] = { 1, 1, 1, -1, -1, -1 };
+
+    //     Mat labelsMat(6, 1, CV_32S, labels);
+
+    //     float trainingData[6][2] = { { 100, 150 }, { 100, 450 }, { 200, 300 }, { 300, 150 }, { 300, 450 }, { 400, 300} };
+    //     Mat trainingDataMat(6, 2, CV_32FC1, trainingData);
+
+    //     // Set up SVM's parameters
+    //     Ptr<SVM> svm = SVM::create();
+    //     svm->setType(SVM::C_SVC);
+    //     svm->setKernel(SVM::POLY);
+    //     svm->setDegree(2.0);
+    //     svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
+
+    //     // Train the SVM with given parameters
+    //     Ptr<TrainData> td = TrainData::create(trainingDataMat, ROW_SAMPLE, labelsMat);
+    //     svm->train(td);
+
+    //     // Or train the SVM with optimal parameters
+    //     //svm->trainAuto(td);
+
+    //     Vec3b green(0, 255, 0), blue(255, 0, 0);
+    //     // Show the decision regions given by the SVM
+    //     for (int i = 0; i < image.rows; ++i)
+    //     {
+    //       for (int j = 0; j < image.cols; ++j)
+    //       {
+    //           Mat sampleMat = (Mat_<float>(1, 2) << j, i);
+    //           float response = svm->predict(sampleMat);
+
+    //           if (response == 1)
+    //               image.at<Vec3b>(i, j) = green;
+    //           else if (response == -1)
+    //               image.at<Vec3b>(i, j) = blue;
+    //       }
+    //     }
+
+    //     // Show the training data
+    //     int thickness = -1;
+    //     int lineType = 8;
+    //     //circle(image, Point(501, 10), 5, Scalar(0, 0, 0), thickness, lineType);
+    //     //circle(image, Point(255, 10), 5, Scalar(255, 255, 255), thickness, lineType);
+    //     //circle(image, Point(501, 255), 5, Scalar(255, 255, 255), thickness, lineType);
+    //     //circle(image, Point(10, 501), 5, Scalar(255, 255, 255), thickness, lineType);
+
+    //     // Show support vectors
+    //     thickness = -1;
+    //     lineType = 8;
+    //     Mat sv = svm->getSupportVectors();
+
+    //     for (int i = 0; i < sv.rows; ++i)
+    //     {
+
+    //         ROS_INFO("Drawing circle");
+    //         const float* v = sv.ptr<float>(i);
+    //         circle(image, Point((int)v[0], (int)v[1]), 6, Scalar(255, 255, 255), thickness, lineType);
+    //     }
+
+    //     ROS_INFO("Stored center line in result.png!");
+
+    //     imwrite("/var/tmp/opencv-img.png", image);        // save the image
+
+    //     imshow("SVM Simple Example", image); // show it to the user
+    //     waitKey(0);
 
 
-    track::Line centerLine;
 
-    // Put one demo point in the center line
-    track::Point demoPoint;
-    demoPoint.x = 1.0;
-    demoPoint.y = 2.0;
-    std::vector<track::Point> centerLinePoints;
-    centerLinePoints.push_back(demoPoint);
-    centerLine.points = centerLinePoints;
+    //     track::Line centerLine;
 
-    return centerLine;
-    }
+    //     // Put one demo point in the center line
+    //     track::Point demoPoint;
+    //     demoPoint.x = 1.0;
+    //     demoPoint.y = 2.0;
+    //     std::vector<track::Point> centerLinePoints;
+    //     centerLinePoints.push_back(demoPoint);
+    //     centerLine.points = centerLinePoints;
+
+    track::Line cline;
+    cline.points = centerLine;
+
+
+    return cline;
+  }
 };
 
 int main(int argc, char **argv) {
