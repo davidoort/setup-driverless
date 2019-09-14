@@ -44,3 +44,4 @@ CATKIN_IGNORE
 
 #Ommit catkin tools profiles
 .catkin_tools
+.catkin_workspace
