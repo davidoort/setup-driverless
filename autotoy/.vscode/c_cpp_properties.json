@@ -6,8 +6,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "/opt/ros/melodic/include/**",
-                "/usr/include/**"
+                "/opt/ros/melodic/include",
+                "${workspaceFolder}/** "
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
