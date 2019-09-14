@@ -1,58 +1,57 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(car)
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
+# ----- PACKAGE DEPENDENCIES -----
+# Specify dependencies for building this package
+find_package(
+  # Add catkin
+  catkin
+  # Specify packages within catkin
+  REQUIRED COMPONENTS
   message_generation
+  std_msgs
+  roscpp
+  track
 )
 
-## Generate messages in the 'msg' folder
+# ----- MESSAGE DEPENDENCIES -----
+# Specify internal message dependencies
 add_message_files(
   FILES
-  Location.msg
   Control.msg
+  Location.msg
 )
 
-## Generate added messages and services with any dependencies listed here
+# Specify external message dependencies
 generate_messages(
   DEPENDENCIES
   std_msgs
   track
 )
 
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if your package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
+# ----- EXPORT PACKAGE DEPENDENCIES -----
+# Specify dependencies for when other packages depend on this package
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES car
-CATKIN_DEPENDS roscpp std_msgs message_runtime
-#  DEPENDS system_lib
+  CATKIN_DEPENDS
+  message_runtime
+  std_msgs
+  roscpp
+  track
 )
 
-###########
-## Build ##
-###########
+# ----- BUILD -----
+# Specifies additional locations of header files
+# See https://cmake.org/cmake/help/v3.0/command/include_directories.html
+include_directories(${catkin_INCLUDE_DIRS})
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
-
+# Make camerasimulator.cpp into an executable (which creates a node)
 add_executable(camerasimulator src/camerasimulator.cpp)
 target_link_libraries(camerasimulator ${catkin_LIBRARIES})
 
+# Make controller.cpp into an executable (which creates a node)
 add_executable(controller src/controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
 
+# Make trackfinder.cpp into an executable (which creates a node)
 add_executable(trackfinder src/trackfinder.cpp)
 target_link_libraries(trackfinder ${catkin_LIBRARIES})
