@@ -95,6 +95,9 @@ int main(int argc, char **argv) {
   // Start the feedback loop
   trackFinder.start();
 
+  // Keep listening till Ctrl+C is pressed
+  ros::spin();
+
   // Exit succesfully
   return 0;
 }
