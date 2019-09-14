@@ -6,7 +6,7 @@ This script is supposed to advertise the cone_placer service and contain the fun
 service request (centerline) and outputs a response (cones).
 */
 
-bool place_cones(track::ConePlacer::Request& req, track::ConePlacer::Response& res)
+bool cone_placer(track::ConePlacer::Request& req, track::ConePlacer::Response& res)
 {
   // Declare variables
   track::Cones placed_cones;
@@ -40,6 +40,8 @@ bool place_cones(track::ConePlacer::Request& req, track::ConePlacer::Response& r
   // return placed cones
   res.cones = placed_cones;
 
+  ROS_INFO("Cones placed!");
+
   return true;
 
 }
@@ -47,10 +49,11 @@ bool place_cones(track::ConePlacer::Request& req, track::ConePlacer::Response& r
 
 int main(int argc, char **argv)
 {
+  ROS_INFO("Starting 'coneplacer' node...");
   ros::init(argc, argv, "coneplacer");
   ros::NodeHandle n;
 
-  ros::ServiceServer service = n.advertiseService("cone_placement", place_cones);
+  ros::ServiceServer service = n.advertiseService("place_cones", cone_placer);
 
   ros::spin();
   return 0;
