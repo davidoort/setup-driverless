@@ -8,6 +8,9 @@
   <license>MIT</license>
   <url type="website">dutracing.nl</url>
 
+  <exec_depend>track</exec_depend>
+  <build_depend>track</build_depend>
+
   <exec_depend>message_runtime</exec_depend>
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>

@@ -31,6 +31,18 @@ loop simulation
 end
 ```
 
+### Teams
+#### Simulation
+Sijmen, Mundi, David
+#### Track & Cone generation
+Ben, Oscar, Orestis
+#### Camera Simulation
+Pietro
+#### Track Finder
+Alex, Gailey, Jules
+#### Controls
+Mees, Philip
+
 ## Components specification
 Here every component's interface is further specified.
 This information should be enough to implement each node independently.
