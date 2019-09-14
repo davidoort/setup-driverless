@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(simulation)
 
-# ----- DEPENDENCIES -----
+# ----- PACKAGE DEPENDENCIES -----
 # Specify dependencies for building this package
 find_package(
   # Add catkin
@@ -14,7 +14,7 @@ find_package(
   track
 )
 
-# ----- EXPORT DEPENDENCIES -----
+# ----- EXPORT PACKAGE DEPENDENCIES -----
 # Specify dependencies for when other packages depend on this package
 catkin_package(
   CATKIN_DEPENDS
