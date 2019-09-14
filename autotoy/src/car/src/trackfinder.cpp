@@ -17,13 +17,8 @@ int main(int argc, char **argv) {
   {
     track::Point msg;
 
-    std::stringstream ss;
-    ss << "Here is line " << count << "!";
     msg.x = 2.3;
     msg.y = 0.8;
-
-    // Log the message
-    //ROS_INFO("%s", msg.data.c_str());
 
     // Send the message
     chatter_pub.publish(msg);

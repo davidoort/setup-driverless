@@ -10,14 +10,14 @@
   <url type="website">dutracing.nl</url>
   <!-- /Package information -->
 
+  <!-- Dependencies -->
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>roscpp</depend>
   <depend>std_msgs</depend>
+  <depend>roscpp</depend>
   <depend>track</depend>
 
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
-
-  <export></export>
+  <!-- /Dependencies -->
 </package>
