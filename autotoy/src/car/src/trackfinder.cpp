@@ -6,20 +6,21 @@
 #include "track/Line.h"
 
 
-class TrackMap {
+class TrackMap 
+{
   public:
-  vector<track::Cone> seen_cones;
-  vector<track::Cone> seen_cones_color;
-  vector<track::Cone> seen_cones_coords;
+  std::vector<track::Cone> seen_cones;
+  std::vector<track::Cone> seen_cones_color;
+  std::vector<track::Cone> seen_cones_coords;
 
-  handle_new_cone(track::Cones new_cones){
-
-    for (int i=0; i<new_cones.size(); i++){
-      seen_cones.push_back(new_cones[i])
-      seen_cones_color.push_back(new_cones[i].color)
-      seen_cones_coords.push_back({new_cones[i].x, new_cones[i].y})
+  bool handle_new_cone(track::Cones new_cones)
+  {
+    for (int i=0; i<new_cones.cones.size(); i++)
+    {
+      seen_cones.push_back(new_cones.cones[i]);
+      seen_cones_color.push_back(new_cones.cones[i].color);
+      seen_cones_coords.push_back({new_cones.cones[i].position.x, new_cones.cones[i].position.y});
     }
-
 
     // Set up training data
     int labels[] = seen_cones_color;
@@ -28,13 +29,18 @@ class TrackMap {
     cv::Mat labelsMat(labels.size(), 1, CV_32SC1, labels);
 
     // Train the SVM
-    cv::Ptr<SVM> svm = cv::ml::SVM::create();
+    cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
     svm->cv::ml::setType(cv::ml::SVM::C_SVC);
     svm->cv::ml::setKernel(cv::ml::SVM::LINEAR);
     svm->cv::ml::setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100, 1e-6));
     svm->cv::ml::train(trainingDataMat, cv::ml::ROW_SAMPLE, labelsMat);
 
-    // Show the decision regions given by the SVM
+  return true;
+  }
+
+  plan_track()
+  {
+        // Show the decision regions given by the SVM
     Vec3b green(0,255,0), blue(255,0,0);
     for (int i = 0; i < image.rows; i++)
     {
@@ -48,17 +54,10 @@ class TrackMap {
                 image.at<Vec3b>(i,j)  = blue;
         }
     }
+
   }
 
 };
-
-
-bool handle_new_cone(car::trackfinder::Request &req,''
-               car::trackfinder::Response &res)
-{
-
-  return true;
-}
 
 
 int main(int argc, char **argv) {
@@ -77,12 +76,16 @@ int main(int argc, char **argv) {
 
   while (ros::ok())
   {
-    track::Line msg;
-    chatter_pub.publish(msg);
-
 
 
     ros::spinOnce();
+
+
+    track::Line msg;
+
+    send_track.publish(msg);
+
+
     loop_rate.sleep();
   }
 
