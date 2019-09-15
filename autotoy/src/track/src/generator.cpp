@@ -16,7 +16,7 @@ public:
   ros::ServiceServer service;
   
   void start() {
-    service = n.advertiseService("/generate/track", &Generator::generate_track, this);
+    service = n.advertiseService("/track/generate", &Generator::generate_track, this);
   }
 
   bool generate_track(track::Generator::Request& req, track::Generator::Response& res) //always has to be a bool
