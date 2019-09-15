@@ -115,16 +115,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "camerasimulator");
     ros::NodeHandle n;
     camera_pub = n.advertise<track::Cones>("visible_cones", 1000); // here we define what the topic is publishing and its name
-    n.subscribe("car_state", 1000, carstateCallback);
-    n.subscribe("cone_world", 1000, coneworldCallback);
-    ros::Rate loop_rate(10);
-
-    int count = 0;
-    while (ros::ok())
-    {
-        ros::spinOnce();
-        loop_rate.sleep();
-        ++count;
-    }
+    ros::Subscriber a = n.subscribe("car_state", 1000, carstateCallback);
+    ros::Subscriber b = n.subscribe("cone_world", 1000, coneworldCallback);
+    ros::spin();
     return 0;
 }
