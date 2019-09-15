@@ -14,35 +14,6 @@ This script is supposed to define the functionality of the "GodNode" which is th
 */
 
 
-// Define Car object (for the model)
-
-class Car {
-public:
-
-  float x; // m
-  float y; // m
-  float heading; // rad
-  float velocity; // m/s
-
-
-  Car()
-  : x(0.0), y(0.0), heading(0.0) {}
-
-  void move(const float accel, const float yawrate, const float dt) {
-
-
-    velocity = velocity + accel*dt;
-
-    x = x + velocity*dt*cos(heading);
-    y = y + velocity*dt*sin(heading);
-
-    heading = yawrate*dt;
-  
-  }
-
-
-};
-
 
 class Simulator {
 public:
@@ -81,34 +52,6 @@ public:
   };
 
 
-  // Callbacks
-
-  void Simulator::command_callback(const ros::MessageEvent<car::Control const>& event)
-  {
-    /* const std::string &publisher_name = event.getPublisherName();
-    const ros::M_string &header = event.getConnectionHeader();
-    
-
-    const car::Control &msg = event.getMessage(); */
-
-    ros::Time receipt_time = event.getReceiptTime();
-    ROS_INFO("Received control command at time %f", receipt_time);
-
-  }
-
-  void Simulator::visible_cone_callback(track::Cones& visible_cones) {
-
-    // Show these cones in Gazebo
-    ROS_INFO("Received visible cones!");
-  }
-
-  void Simulator::target_path_callback(track::Line& target_path) {
-
-
-    ROS_INFO("Received target path!");
-    
-  }
-
 
 
 };
@@ -125,48 +68,7 @@ int main(int argc, char **argv)
 
   tie(centerline, cones) = simulator.getTrack();
 
-  // Do something with centerline, like publish it on a visualization topic
-
-  // Do something with cones, like visualization or more important, publish them on the cone_world topic
-
-  simulator.publish_Cones(cones);
-
-  // Initialize publishers and subscribers
-  simulator.car_location_pub = simulator.nodeHandle.advertise<car::Location>("car_state", 100);
-
-  simulator.car_cmd_sub = simulator.nodeHandle.subscribe("car_control", 100, &Simulator::command_callback, &simulator); // Not sure if the first & is needed
-  simulator.visible_cones_sub = simulator.nodeHandle.subscribe("visible_cones", 100, Simulator::visible_cone_callback, &simulator);
-  simulator.target_path_sub = simulator.nodeHandle.subscribe("target_path", 100, Simulator::target_path_callback, &simulator);
-
-  ros::Rate loop_rate(10);
-  
-  // car location initialized at x=y=theta=0
-  Car car;
-
-  int count = 0;
-  while (ros::ok())
-  {
-   
-
-    // Compile the Location.msg message
-
-
-    car::Location location;
-
-    location.location.x = car.x;
-    location.location.y = car.y;
-    location.heading = car.heading;
-
-    simulator.car_location_pub.publish(location);
-
-    ros::spinOnce();
-    loop_rate.sleep();
-    ++count;
-
-    ROS_INFO("%d", count);
-
-  }
-
+  ros::spin();
   
   return 0;
 
