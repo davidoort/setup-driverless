@@ -159,6 +159,8 @@ When a control command is received the car will be moved accordingly.
 ## Development
 To test the software being developed first run `echo "source <dir-of-autotoy>/devel/setup.bash" >> ~/.bashrc`. In a new terminal, navigate to the catkin workspace (this folder) and build the project with `catkin_make`.
 
+Whenever a change to the source code is made, there are a few common options to compile the code. One is the combination `catkin clean` followed by `catkin build` which wipes out the *build, devel and logs* folders and builds everything again. The other option which is used in the tutorials is to run `catkin_make` once. In some cases, like when the *devel* folder with the header files does not exist, some of these commands might have to be run twice.
+
 ## Running
 To run the project, start a ROS Master and run every node. Start the simulator last. Each should be started from a separate console:
 ```
@@ -172,3 +174,14 @@ rosrun car controller
 
 rosrun simulator main
 ```
+
+
+
+## Lessons learned
+* Would issues and features helped us?
+* Running in a Docker environment to not have issues of "runs on my machine" as experienced by Jules and David. 
+* Continous integration (or some basic unit tests) to make sure that master never has bugs and can be compiled (which was not the case after the PR from Sijmen and Edmundo) with the weird `include`.
+* Doing more frequent pull requests to master with updated msg, package and CMakeLists files which everyone has to share. 
+* Push code immendiately, especially before a period of absence.
+* More frequent PR to Master
+

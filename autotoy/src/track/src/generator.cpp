@@ -1,29 +1,95 @@
 #include "ros/ros.h"
 #include "track/Generator.h"
-#include "track/Track.h"
+#include "track/ConePlacer.h"
 
-bool add(track::Generator::Request  &req,
-         track::Generator::Response &res)
-{
-  std::vector<track::Point> centrelinepoints = {*(new track::Point()), *(new track::Point())};
-  track::Line* centreline = new track::Line();
-  centreline->points = centrelinepoints;
+/* This script defines the functionality of the generator node which in essence 
+creates a client which requests a service to conesplacer by passing as request a generated centerline 
+and then creates a response which is sent to Simulator as part of the Generator service it provides.
+*/
 
-  track::Track* output = new track::Track();
-  output->centreline = *(centreline);
-  res.track = *output;
-  ROS_INFO("Generated new track in response to generator-request");
-  return true;
-}
+
+class Generator {
+public:
+
+  ros::NodeHandle n;
+  ros::ServiceClient client;
+  ros::ServiceServer service;
+  
+
+  /* Generator() {
+    service = n.advertiseService("generate_track", &Generator::generate_track, this);
+  } */
+  void start() {
+    service = n.advertiseService("generate_track", &Generator::generate_track, this);
+  }
+
+  bool generate_track(track::Generator::Request& req, track::Generator::Response& res) //always has to be a bool
+  {
+    // Create centerline
+    ROS_INFO("Creating Centerline");
+    std::vector<track::Point> centerline_points;
+    track::Line centerline_line;
+    
+    // Create points of the centerline and append them to the centerline vector
+
+    int i;
+    for(i=0; i<5; i++)
+    {
+      track::Point new_point;
+      new_point.x = (float)i;
+      new_point.y = (float)i;
+
+      centerline_points.push_back(new_point);
+    }
+    
+    centerline_line.points = centerline_points;
+
+    // Create client
+    ros::ServiceClient client = n.serviceClient<track::ConePlacer>("place_cones");
+    track::ConePlacer srv;
+    srv.request.centreline = centerline_line;
+
+    if(client.call(srv))
+    {
+      // The call goes through and a response is received
+      ROS_INFO("Cones placed!");
+
+      track::Cones placed_cones =  srv.response.cones;
+      track::Track track;
+      track.centreline = centerline_line;
+      track.cones = placed_cones;
+      res.track = track;
+
+      ROS_INFO("Track generated!");
+
+      return true;
+    }
+    else
+    {
+      ROS_ERROR("Failed to call the service place_cones");
+      return false;
+    }
+  }
+};
+
+
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "generator");
-  ros::NodeHandle n;
+  // Init the node
+  ROS_INFO("Starting 'trackgenerator' node...");
+  ros::init(argc, argv, "trackgenerator");
 
-  ros::ServiceServer service = n.advertiseService("/track/generate", add);
-  ROS_INFO("Ready to generate tracks.");
+  // Instantiate a Generator object
+  Generator generator;
+
+  generator.start();
+
+  ROS_INFO("Ready to generate track.");
+
   ros::spin();
-
   return 0;
 }
+
+
+
