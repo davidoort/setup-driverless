@@ -15,10 +15,6 @@ public:
   ros::ServiceClient client;
   ros::ServiceServer service;
   
-
-  /* Generator() {
-    service = n.advertiseService("generate_track", &Generator::generate_track, this);
-  } */
   void start() {
     service = n.advertiseService("generate_track", &Generator::generate_track, this);
   }
