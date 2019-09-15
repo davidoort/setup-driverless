@@ -7,7 +7,7 @@
 /* 
 This script is supposed to define the functionality of the "GodNode" which is the simulator. 
 
-- First of all, it starts the simulation by defining a client of the "generate_track" service which returns a track. 
+- First of all, it starts the simulation by defining a client of the "/track/generate" service which returns a track. 
 - It then has to publish the location of the car to the /car/location topic and the location (and color) of the cones to the /track/cones topic
 - It will subscribe to /car/location topic to receive control command messages, which will be passed through a car model and the car location will be updated.
 - It will subscribe to a bunch of extra topics such as car/camera, car/targetline to be able to represent these things in RViz and help with debugging

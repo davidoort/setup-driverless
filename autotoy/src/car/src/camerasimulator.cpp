@@ -6,8 +6,8 @@
 //
 
 // what it publishes: track::Cones through topic visible_cones
-// what it subscribe: track::Cones from cone_world (list of cones, only on time)
-//                    car::Location from car_state (current car position, multiple times)
+// what it subscribe: track::Cones from /track/cones (list of cones, only on time)
+//                    car::Location from /car/location (current car position, multiple times)
 
 // including packages
 #include "ros/ros.h"
@@ -114,9 +114,9 @@ int main(int argc, char **argv)
 
     ros::init(argc, argv, "camerasimulator");
     ros::NodeHandle n;
-    camera_pub = n.advertise<track::Cones>("visible_cones", 1000); // here we define what the topic is publishing and its name
-    ros::Subscriber a = n.subscribe("car_state", 1000, carstateCallback);
-    ros::Subscriber b = n.subscribe("cone_world", 1000, coneworldCallback);
+    camera_pub = n.advertise<track::Cones>("/car/camera", 1000); // here we define what the topic is publishing and its name
+    ros::Subscriber a = n.subscribe("/car/location", 1000, carstateCallback);
+    ros::Subscriber b = n.subscribe("/track/cones", 1000, coneworldCallback);
     ros::spin();
     return 0;
 }
