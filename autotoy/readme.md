@@ -170,18 +170,12 @@ Whenever a change to the source code is made, there are a few common options to 
 ## Running
 To run the project, start a ROS Master and run every node. Start the simulator last. Each should be started from a separate console:
 ```
-roscore
-
-rosrun track generator
-rosrun track coneplacer
-rosrun car camerasimulator
-rosrun car trackfinder
-rosrun car controller
-
-rosrun simulator god
+catkin init
+catkin clean
+catkin_make
+source devel/setup.bash
+roslaunch world.launch
 ```
-
-
 
 ## Lessons learned
 * Would issues and features helped us?
