@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <track/Generator.h>
 #include <visualization_msgs/Marker.h>
 
 #include <cmath>
@@ -10,7 +11,7 @@ int main( int argc, char** argv )
   // ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 10);
   // ros::ServiceClient client = n.serviceClient<PACKAGE_NAME::SERVICE_NAME>("SERVICE_NAME");
   // create client needed to request from ben
-  ros::ServiceClient client = n.serviceClient<track::Generator>("/track/Generator"); 
+  ros::ServiceClient client = n.serviceClient<track::Generator>("/track/generate_track"); 
 
   ros::Rate r(30);
 
