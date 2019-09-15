@@ -37,8 +37,8 @@ include_directories(${catkin_INCLUDE_DIRS})
 add_executable(simulationmain src/main.cpp)
 target_link_libraries(simulationmain ${catkin_LIBRARIES})
 
-add_executable(basic_shapes src/basic_shapes.cpp)
-target_link_libraries(basic_shapes ${catkin_LIBRARIES})
+#add_executable(basic_shapes src/basic_shapes.cpp)
+#target_link_libraries(basic_shapes ${catkin_LIBRARIES})
 
 add_executable(cone_shapes src/cones.cpp)
 target_link_libraries(cone_shapes ${catkin_LIBRARIES})
@@ -46,5 +46,5 @@ target_link_libraries(cone_shapes ${catkin_LIBRARIES})
 add_executable(points_and_lines src/points_and_lines.cpp)
 target_link_libraries(points_and_lines ${catkin_LIBRARIES})
 
-add_executable(conemap src/conemap.cpp)
-target_link_libraries(conemap ${catkin_LIBRARIES})
+#add_executable(conemap src/conemap.cpp)
+#target_link_libraries(conemap ${catkin_LIBRARIES})

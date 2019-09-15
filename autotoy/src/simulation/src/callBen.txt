@@ -9,7 +9,8 @@ int main(int argc, char **argv)
 
   // ros::ServiceClient client = n.serviceClient<PACKAGE_NAME::SERVICE_NAME>("SERVICE_NAME");
   // create client needed to request from ben
-  ros::ServiceClient client = n.serviceClient<track::Generator>("/track/Generator"); 
+  // ros::ServiceClient client = n.serviceClient<track::Generator>("/track/Generator"); 
+  ros::ServiceClient client = n.serviceClient<track::Generator>("/track/generate_track"); 
 
   ROS_INFO("Ready to call Ben.");
 
