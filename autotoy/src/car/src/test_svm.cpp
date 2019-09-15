@@ -12,9 +12,40 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "test_svm");
 
   ros::NodeHandle n;
-  ros::Publisher send_track = n.advertise<track::Cones>("/car/cameratest", 1000);
+  ros::Publisher send_camera = n.advertise<track::Cones>("/car/camera", 1000);
+
+  int n_cones = 8;
+  float cones_x[n_cones] = {100,100,200,300,300,400,50,250};
+  float cones_y[n_cones] = {150,450,300,150,450,300,50,50};
+  int cones_col[n_cones] = { 1, 1, 1, 0, 0, 0, 1, 0};
+
+  std::vector<track::Cone> new_cones;
+  track::Cones cameraCones;
+
+  // Generate Fake information
+  ros::Rate rate(1);
+
+  while(ros::ok()){
+    for (int i = 0; i < n_cones; ++i){
+      track::Cone newCone;
+      newCone.position.x = cones_x[i];
+      newCone.position.y = cones_y[i];
+      newCone.color = cones_col[i];
+
+      new_cones.push_back(newCone);
+    }
+
+    cameraCones.cones = new_cones;
+    send_camera.publish(cameraCones);
+
+    ROS_INFO_STREAM("Sending random cones to camera");
+    rate.sleep();
+  }
 
 
+
+
+  /*
   int num_points = 10;
   float power = 1.25;
 
@@ -48,7 +79,9 @@ int main(int argc, char **argv) {
   ROS_INFO("Generated fake track");
 
   send_cones.cones = new_cones;
-  send_track.publish(send_cones);
+  send_camera.publish(send_cones);
+  
 
   return 0;
+  */
 }
