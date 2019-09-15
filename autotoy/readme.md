@@ -182,4 +182,6 @@ rosrun simulator main
 * Running in a Docker environment to not have issues of "runs on my machine" as experienced by Jules and David. 
 * Continous integration (or some basic unit tests) to make sure that master never has bugs and can be compiled (which was not the case after the PR from Sijmen and Edmundo) with the weird `include`.
 * Doing more frequent pull requests to master with updated msg, package and CMakeLists files which everyone has to share. 
+* Push code immendiately, especially before a period of absence.
+* More frequent PR to Master
 
