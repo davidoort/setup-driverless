@@ -78,19 +78,19 @@ public:
 
   // Callbacks
 
-  void command_callback(const car::Control& control)
+  void controlCommandReceived(const car::Control& control)
   {
     car.move(control.acceleration, control.yawrate);
     ROS_INFO("Received control command");
   }
 
-  void visible_cone_callback(track::Cones& visible_cones) {
+  void visableConesReceived(const track::Cones& visible_cones) {
 
     // Show these cones in Gazebo
     ROS_INFO("Received visible cones!");
   }
 
-  void target_path_callback(track::Line& target_path) {
+  void targetPathReceived(const track::Line& target_path) {
     ROS_INFO("Received target path!");
   }
 
@@ -124,15 +124,14 @@ int main(int argc, char **argv)
   // Initialize publishers and subscribers
   simulator.car_location_pub = nodeHandler.advertise<car::Location>("car_state", 100);
 
-  simulator.car_cmd_sub = nodeHandler.subscribe("car_control", 100, &simulator.command_callback); // Not sure if the first & is needed
-  simulator.visible_cones_sub = nodeHandler.subscribe("visible_cones", 100, simulator.visible_cone_callback, &simulator);
-  simulator.target_path_sub = nodeHandler.subscribe("target_path", 100, simulator.target_path_callback, &simulator);
+  simulator.car_cmd_sub = nodeHandler.subscribe("car_control", 100, &Simulator::controlCommandReceived, &simulator); // Not sure if the first & is needed
+  simulator.visible_cones_sub = nodeHandler.subscribe("visible_cones", 100, &Simulator::visableConesReceived, &simulator);
+  simulator.target_path_sub = nodeHandler.subscribe("target_path", 100, &Simulator::targetPathReceived, &simulator);
 
   ros::Rate loop_rate(1/timeBetweenTick);
   
   // car location initialized at x=y=theta=0
 
-  int count = 0;
   while (ros::ok())
   {
     car::Location location;
@@ -144,10 +143,6 @@ int main(int argc, char **argv)
 
     ros::spinOnce();
     loop_rate.sleep();
-    ++count;
-
-    ROS_INFO("%d", count);
-
   }
   return 0;
 }
