@@ -3,6 +3,8 @@
 #include "opencv2/imgcodecs.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/ml.hpp>
+#include <math.h>
+#include <cmath>
 
 using namespace cv;
 using namespace cv::ml;
@@ -43,15 +45,7 @@ public:
 
 
   track::Line findCenterLine(std::vector<track::Cone> visibleCones) {
-
-    // FAKE INPUT
-    int n_cones  = 8;
-    int cones_col[n_cones] = { 1, 1, 1, -1, -1, -1, 1, -1 };
-    float cones_pos[n_cones][2] = { { 100, 150 }, { 100, 450 }, { 200, 300 }, { 300, 150 }, { 300, 450 }, { 400, 300}, { 50, 50 },{ 250, 50 } };
-    float cones_x[n_cones] = {100,100,200,300,300,400,50,250};
-    float cones_y[n_cones] = {150,450,300,150,450,300,50,50};  
-
-    /*
+   
     // ACTUAL INPUT
     int n_cones = visibleCones.size();
 
@@ -70,19 +64,18 @@ public:
       cones_x[i] = visibleCones[i].position.x;
       cones_y[i] = visibleCones[i].position.y;
     };
-    */
 
-    //-------------------------------------------------------------------------------------------------//
+
     // Set up training data
     Mat labelsMat(n_cones, 1, CV_32S, cones_col);
     Mat trainingDataMat(n_cones, 2, CV_32FC1, cones_pos);
     
     // Set up SVM's parameters
     Ptr<SVM> svm = SVM::create();
-    svm->setType(SVM::NU_SVC);
+    svm->setType(SVM::C_SVC);
     svm->setKernel(SVM::POLY);
     svm->setDegree(2.0);
-    svm->setNu(0.5);
+    // svm->setNu(0.1);
     svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 100, 1e-6));
 
     // Train the SVM with given parameters
@@ -90,7 +83,7 @@ public:
     svm->train(td);
 
     // Or train the SVM with optimal parameters
-    //svm->trainAuto(td);
+    // svm->trainAuto(td);
 
     // Data for the map
   
@@ -99,7 +92,7 @@ public:
     int y_min = *min_element(cones_y, cones_y + n_cones);
     int y_max = *max_element(cones_y, cones_y + n_cones);
 
-    Mat map = Mat::zeros(y_max, x_max, CV_8UC3);
+    Mat map = Mat::zeros(600, 600, CV_8UC3);
     ROS_INFO_STREAM("Creating a map. x: {" << x_min << "," << x_max << "}");
 
     // Initialize vector to store points on centerline
@@ -153,10 +146,10 @@ public:
     for (int i = 0; i < sv.rows; ++i)
     {
         const float* v = sv.ptr<float>(i);
-        circle(map, Point((int)v[0], (int)v[1]), 8, Scalar(0, 0, 0), 2, 8);   // Black circles indicate Support Vectors
+        circle(map, Point((int)v[0], (int)v[1]), 8, Scalar(0,0,255), 2, 8);   // Red circles indicate Support Vectors
     }
 
-    imshow("SVM Simple Example", map); // show it to the user
+    imshow("SVM Simple Example", map); // show it to the users
     waitKey(0);
     
 
@@ -255,14 +248,14 @@ int main(int argc, char **argv) {
   TrackFinder trackFinder;
 
   // Start the feedback loop
-  // trackFinder.start();
+  trackFinder.start();
 
   // Directly run findCenterLine()
-  vector<track::Cone> cones;
-  trackFinder.findCenterLine(cones);
+  //vector<track::Cone> cones;
+  //trackFinder.findCenterLine(cones);
 
   // Keep listening till Ctrl+C is pressed
-  //ros::spin();
+  ros::spin();
 
   // Exit succesfully
   return 0;
