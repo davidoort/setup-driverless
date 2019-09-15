@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
   <!-- Package information -->
-  <name>track</name>
+  <name>simulation</name>
   <version>0.0.0</version>
-  <description>The track package</description>
+  <description>The simulation package</description>
   <maintainer email="driverless@dutracing.nl">DUT Driverless</maintainer>
   <author email="driverless@dutracing.nl">DUT Driverless</author>
   <license>MIT</license>
@@ -15,6 +15,7 @@
 
   <depend>std_msgs</depend>
   <depend>roscpp</depend>
+  <depend>track</depend>
 
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
