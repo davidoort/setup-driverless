@@ -17,7 +17,7 @@ This script is supposed to define the functionality of the "GodNode" which is th
 // Define Car object (for the model)
 
 // in seconds
-#define timeBetweenTick 1/10
+#define timeBetweenTick 0.1
 
 class Car {
 public:
@@ -27,8 +27,7 @@ public:
   float heading; // radians
   float velocity; // meter/second
 
-
-  Car() : x(0.0), y(0.0), heading(0.0) {}
+  Car() : x(0.0), y(0.0), heading(0.0), velocity(0.0) {}
 
   void move(const float accel, const float yawrate) {
     velocity = velocity + accel*timeBetweenTick;
@@ -45,7 +44,7 @@ class Simulator {
 public:
   ros::Publisher cones_pub, car_location_pub;
   ros::Subscriber car_cmd_sub, visible_cones_sub, target_path_sub;
-  Car car;
+  Car* car;
 
   std::tuple<track::Line, track::Cones> getTrack(ros::NodeHandle& nodeHandle) {
     ros::ServiceClient client = nodeHandle.serviceClient<track::Generator>("generate_track");
@@ -61,12 +60,9 @@ public:
       track::Cones cones = srv.response.track.cones;
       return std::make_tuple(centerline, cones);
     }
-    else
-    {
-      ROS_ERROR("Failed to call service generate_track");
-      ros::shutdown(); //  this shuts down all publishers (and everything else).
-    }
-
+    ROS_ERROR("Failed to call service generate_track");
+    ros::shutdown(); //  this shuts down all publishers (and everything else).
+    return std::make_tuple(track::Line(), track::Cones());
   }
 
   void publish_Cones(ros::NodeHandle& nodeHandle, track::Cones& cones) {
@@ -80,7 +76,7 @@ public:
 
   void controlCommandReceived(const car::Control& control)
   {
-    car.move(control.acceleration, control.yawrate);
+    car->move(control.acceleration, control.yawrate);
     ROS_INFO("Received control command");
   }
 
@@ -94,7 +90,7 @@ public:
     ROS_INFO("Received target path!");
   }
 
-  void setCar(Car& newCar) {
+  void setCar(Car* newCar) {
     car = newCar;
   }
 };
@@ -108,7 +104,7 @@ int main(int argc, char **argv)
 
   Car car;
   Simulator simulator;
-  simulator.setCar(car);
+  simulator.setCar(&car);
 
   track::Line centerline;
   track::Cones cones;
