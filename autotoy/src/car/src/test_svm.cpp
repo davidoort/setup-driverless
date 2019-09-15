@@ -48,7 +48,13 @@ int main(int argc, char **argv) {
   ROS_INFO("Generated fake track");
 
   send_cones.cones = new_cones;
-  send_track.publish(send_cones);
+  ros::Rate loop_rate(0.3);
 
+  while(ros::ok()){
+    send_track.publish(send_cones);
+
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
   return 0;
 }
