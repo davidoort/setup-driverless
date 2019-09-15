@@ -56,3 +56,6 @@ target_link_libraries(controller ${catkin_LIBRARIES})
 
 add_executable(trackfinder src/trackfinder.cpp)
 target_link_libraries(trackfinder ${catkin_LIBRARIES})
+
+add_executable(Benca src/Bencall.cpp)
+target_link_libraries(Benca ${catkin_LIBRARIES})

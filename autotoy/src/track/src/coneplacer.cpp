@@ -32,7 +32,7 @@ void  conePlacer(const track::Line &centreline, const float conedistance, ConesI
   track::Point* leftpoint = new track::Point; // to store temporary point for left cones
   track::Point* rightpoint = new track::Point; // to store temporary point for right cones
 
-  for(int i = 1; i < length; i++)
+  for(int i = 0; i < length; i++) // WTF BEN??? Really, WTF!   i=1
   {
     // check if at beginning, middle, or end of the array
     if(i == 0) //first point
@@ -71,6 +71,7 @@ void  conePlacer(const track::Line &centreline, const float conedistance, ConesI
     
   }
 
+// Well done Ben we love u
   delete leftpoint, rightpoint;
   std::cout << "Cones Calculated" << std::endl;
 }
@@ -80,6 +81,7 @@ bool server(track::ConePlacer::Request  &req, track::ConePlacer::Response &res)
   ConesInternal* conesptr = new ConesInternal; // add ConesInternal to the heap (where can I delete it?)
   conePlacer(req.centreline, (float)1.5, *conesptr); // fill Cones objects in conesptr object
   res.leftcones = (*conesptr).leftcones; // fill response with left cones
+  // or: res.leftcones = conesptr->leftcones; 
   res.rightcones = (*conesptr).rightcones; // fille response with rightcones
   ROS_INFO("Generated cone placements in response to ConePlacer-request");
   return true;
@@ -92,7 +94,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "coneplacer"); //initialise node
   ros::NodeHandle n; //node variable
 
-  ros::ServiceServer service = n.advertiseService("/track/coneplacer", server); // create server for coneplacer
+  ros::ServiceServer service = n.advertiseService("/track/ConePlacer", server); // create server for coneplacer
   ROS_INFO("Ready to generate cones.");
   ros::spin();
 

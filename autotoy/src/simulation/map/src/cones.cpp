@@ -16,7 +16,7 @@ int main( int argc, char** argv )
     marker.ns = "cone_shapes";
     marker.id = 0;
     marker.type = visualization_msgs::Marker::MESH_RESOURCE;
-    marker.mesh_resource = "package://using_markers/meshes/cone_blue.dae";
+    marker.mesh_resource = "package://map/meshes/cone_blue.dae";
     marker.action = visualization_msgs::Marker::ADD;
 
     
