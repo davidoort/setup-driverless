@@ -14,7 +14,6 @@ This script is supposed to define the functionality of the "GodNode" which is th
 */
 
 
-// Define Car object (for the model)
 
 // in seconds
 #define timeBetweenTick 0.1
@@ -78,7 +77,6 @@ public:
   };
 
 
-  // Callbacks
 
   void controlCommandReceived(const car::Control& control)
   {
