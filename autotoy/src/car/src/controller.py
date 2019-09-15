@@ -1,5 +1,7 @@
 import rospy
 from std_msgs import String
+from track.msg import Line
+from car.msg import Control, Location
 
 class Controller:
     
@@ -9,13 +11,16 @@ class Controller:
         
         # Inititate publisher and subscribers
         self.listener()
-        self.talker()
+        try:
+            self.talker()
+        except rospy.ROSInterruptException:
+            pass
         
     def listener(self):
         rospy.init_node('controller')
         
-        rospy.Subscriber('/car/targetline', String, self.target_line_callback) # 'String' should be replace by 'Line' message type when it is created by the track finder guys
-        rospy.Subscriber('/car/location', String, self.location_callback)   # 'String' should be replace by 'Location' message type when it is created by the location guys 
+        rospy.Subscriber('/car/targetline', Line, self.target_line_callback)
+        rospy.Subscriber('/car/location', Location, self.location_callback)
         
         rospy.spin()
         
