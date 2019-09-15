@@ -96,7 +96,6 @@ float32 yawrate
 ### Topic definitions
 | Topic name | Description | Message type | 
 |---|---|---|
-
 | `/car/location` | The location of the car will be published here. | `car/Location.msg` |
 | `/track/cones` | Publishes all the cones of the track | `track/Cones.msg` |
 | `/car/camera` | The cones visible to the car will be published here. | `track/Cones.msg` |
