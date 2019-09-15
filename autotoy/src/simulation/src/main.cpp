@@ -26,16 +26,21 @@ public:
   float y; // meter
   float heading; // radians
   float velocity; // meter/second
+  float acceleration; // meter/second^2
+  float yawrate; // radians/second
 
-  Car() : x(0.0), y(0.0), heading(0.0), velocity(0.0) {}
+  Car() : x(0.0), y(0.0), heading(0.0), velocity(0.0), acceleration(0.0), yawrate(0.0) {}
 
-  void move(const float accel, const float yawrate) {
-    velocity = velocity + accel*timeBetweenTick;
-
+  void move() {
+    velocity = velocity + acceleration*timeBetweenTick;
+    heading = heading + yawrate*timeBetweenTick;
     x = x + velocity*timeBetweenTick*cos(heading);
     y = y + velocity*timeBetweenTick*sin(heading);
+  }
 
-    heading = yawrate*timeBetweenTick;
+  void control(const float accel, const float newYawrate) {
+    yawrate = newYawrate;
+    acceleration = accel;
   }
 };
 
@@ -76,7 +81,7 @@ public:
 
   void controlCommandReceived(const car::Control& control)
   {
-    car->move(control.acceleration, control.yawrate);
+    car->control(control.acceleration, control.yawrate);
     ROS_INFO("Received control command");
   }
 
@@ -130,6 +135,7 @@ int main(int argc, char **argv)
 
   while (ros::ok())
   {
+    car.move();
     car::Location location;
     location.location.x = car.x;
     location.location.y = car.y;
