@@ -58,7 +58,3 @@ target_link_libraries(controller ${catkin_LIBRARIES})
 # Make trackfinder.cpp into an executable (which creates a node)
 add_executable(trackfinder src/trackfinder.cpp)
 target_link_libraries(trackfinder ${catkin_LIBRARIES})
-
-# Make test_svm.cpp into an executable (which creates a node)
-add_executable(test_svm src/test_svm.cpp)
-target_link_libraries(test_svm ${catkin_LIBRARIES})
