@@ -46,9 +46,7 @@ int main(int argc, char **argv)
 	  points.ns = "track_cones_location";
 	  points.action = visualization_msgs::Marker::ADD;
 	  points.id = 0;
-	  // points.type = visualization_msgs::Marker::POINTS;
-	  points.type = visualization_msgs::Marker::MESH_RESOURCE;
-      points.mesh_resource = "package://simulation/meshes/cone_blue.dae";
+	  points.type = visualization_msgs::Marker::POINTS;
 
 	  points.scale.x = 0.2;
 	  points.scale.y = 0.2;
@@ -75,8 +73,7 @@ int main(int argc, char **argv)
 	  for (int i=0; i<size; i++){
 	    // ROS_INFO("%f, %f, %i", cones.cones[i].position.x, cones.cones[i].position.y, cones.cones[i].color);
 
-	    geometry_msgs::Point p;
-	    std_msgs::ColorRGBA pc;
+	    geometry_msgs::Point p; std_msgs::ColorRGBA pc;
 	    p.x = cones.cones[i].position.x;
 	    p.y = cones.cones[i].position.y;
 	    p.z = z;

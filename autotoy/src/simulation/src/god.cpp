@@ -3,6 +3,8 @@
 #include "car/Location.h"
 #include "car/Control.h"
 #include <tuple>
+#include <visualization_msgs/Marker.h>
+#include <cmath>
 
 /* 
 This script is supposed to define the functionality of the "GodNode" which is the simulator. 
@@ -55,13 +57,13 @@ public:
     track::Generator srv;
     if (client.call(srv)){
       ROS_INFO("Received a track!");
-      // Extract a centerline from the track message
 
+      // Extract a centerline from the track message
       track::Line centerline = srv.response.track.centreline;
 
       // Extract cones (to be published later) from the track message
-
       track::Cones cones = srv.response.track.cones;
+
       return std::make_tuple(centerline, cones);
     }
 
@@ -84,7 +86,7 @@ public:
     ROS_INFO("Received control command!");
   }
 
-  void visableConesReceived(const track::Cones& visible_cones) {
+  void visibleConesReceived(const track::Cones& visible_cones) {
 
     // Show these cones in RViz
     ROS_INFO("Received visible cones!");
@@ -107,6 +109,8 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "god");
   ros::NodeHandle nodeHandler;
+  ros::Publisher marker_pub = nodeHandler.advertise<visualization_msgs::Marker>("visualization_marker", 10);
+  ros::Rate r(30);
 
   Car car;
   Simulator simulator;
@@ -117,6 +121,36 @@ int main(int argc, char **argv)
 
   tie(centerline, cones) = simulator.getTrack(nodeHandler);
 
+  visualization_msgs::Marker points;
+  points.header.frame_id = "/cones";
+  points.header.stamp = ros::Time::now();
+  points.ns = "track_cones_location";
+  points.action = visualization_msgs::Marker::ADD;
+  points.id = 0;
+  points.type = visualization_msgs::Marker::POINTS;
+
+  points.scale.x = 0.2;
+  points.scale.y = 0.2;
+  points.color.g = 1.0f;
+  points.color.a = 1.0;
+  int z = 0;
+
+
+  int size = cones.cones.size();
+  for (int i=0; i<size; i++){
+    ROS_INFO("%f, %f, %i", cones.cones[i].position.x, cones.cones[i].position.y, cones.cones[i].color);
+
+    geometry_msgs::Point p;
+    p.x = cones.cones[i].position.x;
+    p.y = cones.cones[i].position.y;
+    p.z = z;
+
+    points.points.push_back(p);
+
+    ROS_INFO("P");
+  }
+
+  marker_pub.publish(points);
   // Do something with centerline, like publish it on a visualization topic
   // ros::Publisher centerline_pub = nodeHandler.advertise<track::Line>("/viz/centerline", 100);
   // Do something with cones, like visualization or more important, publish them on the cone_world topic
@@ -127,7 +161,7 @@ int main(int argc, char **argv)
   simulator.car_location_pub = nodeHandler.advertise<car::Location>("/car/location", 100);
 
   simulator.car_cmd_sub = nodeHandler.subscribe("/car/controls", 100, &Simulator::controlCommandReceived, &simulator); // Not sure if the first & is needed
-  simulator.visible_cones_sub = nodeHandler.subscribe("/car/camera", 100, &Simulator::visableConesReceived, &simulator);
+  simulator.visible_cones_sub = nodeHandler.subscribe("/car/camera", 100, &Simulator::visibleConesReceived, &simulator);
   simulator.target_path_sub = nodeHandler.subscribe("/car/targetline", 100, &Simulator::targetPathReceived, &simulator);
 
   ros::Rate loop_rate(1/timeBetweenTick);
