@@ -43,6 +43,9 @@ target_link_libraries(god ${catkin_LIBRARIES})
 add_executable(cone_shapes src/cones.cpp)
 target_link_libraries(cone_shapes ${catkin_LIBRARIES})
 
+add_executable(visualize_track src/visualize_track.cpp)
+target_link_libraries(visualize_track ${catkin_LIBRARIES})
+
 add_executable(points_and_lines src/points_and_lines.cpp)
 target_link_libraries(points_and_lines ${catkin_LIBRARIES})
 
