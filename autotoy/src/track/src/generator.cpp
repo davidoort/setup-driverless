@@ -42,12 +42,10 @@ public:
       new_point.x = (float) (h + r*cos(theta));
       new_point.y = (float) (k + r*sin(theta));
 
-      centreline_points.push_back(new_point);
+      centerline_points.push_back(new_point);
       theta+=step;
     }
 
-
-    }
     
     centerline_line.points = centerline_points;
 
