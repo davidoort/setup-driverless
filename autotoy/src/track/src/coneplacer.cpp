@@ -53,7 +53,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "coneplacer");
   ros::NodeHandle n;
 
-  ros::ServiceServer service = n.advertiseService("place_cones", cone_placer);
+  ros::ServiceServer service = n.advertiseService("/track/coneplacer", cone_placer);
 
   ros::spin();
 

@@ -34,8 +34,8 @@ install(PROGRAMS scripts/key_teleop.py
 include_directories(${catkin_INCLUDE_DIRS})
 
 # Make main.cpp into an executable (which creates a node)
-add_executable(simulationmain src/main.cpp)
-target_link_libraries(simulationmain ${catkin_LIBRARIES})
+add_executable(god src/god.cpp)
+target_link_libraries(god ${catkin_LIBRARIES})
 
 #add_executable(basic_shapes src/basic_shapes.cpp)
 #target_link_libraries(basic_shapes ${catkin_LIBRARIES})
