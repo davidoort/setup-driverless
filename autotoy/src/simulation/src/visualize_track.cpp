@@ -7,6 +7,11 @@
 #include <visualization_msgs/Marker.h>
 #include <cmath>
 
+void show_visible_cones()
+{
+	ROS_INFO("Message detected");
+}
+
 int main(int argc, char **argv)
 {
   // Initialize ROS; name of the node: "visualize_track"
@@ -99,5 +104,10 @@ int main(int argc, char **argv)
 
 
 	  return 0;
+
+	  //ros::Subscriber sub = n.subscribe("/car/camera", 1000, show_visible_cones); // 
+
+
+
   }
 }
