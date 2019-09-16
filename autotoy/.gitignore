@@ -41,3 +41,10 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
+#Ommit catkin tools profiles
+.catkin_tools
+
+.vscode
+*_class
+*.out

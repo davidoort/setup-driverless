@@ -1,43 +1,34 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(simulation)
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
+# ----- PACKAGE DEPENDENCIES -----
+# Specify dependencies for building this package
+find_package(
+  # Add catkin
+  catkin
+  # Specify packages within catkin
+  REQUIRED COMPONENTS
+  message_generation
   std_msgs
+  roscpp
   track
 )
 
-add_dependencies(
- ${${PROJECT_NAME}_EXPORTED_TARGETS}
- ${catkin_EXPORTED_TARGETS}
-)
-
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if your package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
+# ----- EXPORT PACKAGE DEPENDENCIES -----
+# Specify dependencies for when other packages depend on this package
 catkin_package(
-  INCLUDE_DIRS include
-#  LIBRARIES simulation
-CATKIN_DEPENDS roscpp std_msgs message_runtime track
-#  DEPENDS system_lib
+  CATKIN_DEPENDS
+  message_runtime
+  std_msgs
+  roscpp
+  track
 )
 
-###########
-## Build ##
-###########
+# ----- BUILD -----
+# Specifies additional locations of header files
+# See https://cmake.org/cmake/help/v3.0/command/include_directories.html
+include_directories(${catkin_INCLUDE_DIRS})
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
-add_executable(main src/main.cpp)
-target_link_libraries(main ${catkin_LIBRARIES})
+# Make main.cpp into an executable (which creates a node)
+add_executable(god src/god.cpp)
+target_link_libraries(god ${catkin_LIBRARIES})

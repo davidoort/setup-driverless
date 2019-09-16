@@ -109,6 +109,27 @@ You will additionally be prompted to install the following optional (and recomme
 * Chrome
 * More might be added...
 
+In VS Code, it is recommended to add the following extensions:
+* Microsoft C/C++ 
+* Microsoft Python 
+* twxs CMake 
+* Microsoft Docker 
+* Microsoft ROS
+
+Additionally, inside of VS Code, press `Ctrl`+`Shift`+`P` and search for C/C++ Edit Configurations (UI). In the section called *Include path* add the following:
+
+``` 
+/opt/ros/melodic/include
+${workspaceFolder}/** 
+```
+
+If you want to setup autosave in VS Code then search for (`Ctrl`+`Shift`+`P`) *Open Settings (JSON)* and add the following lines to the end of the .json file:
+
+``` 
+"files.autoSave": "afterDelay",
+"files.autoSaveDelay": 100
+```
+
 
 ## Jenkins Server installation
 1. Install ubuntu (minimal install is fine)

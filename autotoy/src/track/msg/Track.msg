@@ -1,3 +1,2 @@
 track/Line centreline
-track/Cones leftcones
-track/Cones rightcones
+track/Cones cones

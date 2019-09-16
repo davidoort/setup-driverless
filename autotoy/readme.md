@@ -31,6 +31,18 @@ loop simulation
 end
 ```
 
+### Teams
+#### Simulation
+Sijmen, Mundi, David
+#### Track & Cone generation
+Ben, Oscar, Orestis
+#### Camera Simulation
+Pietro
+#### Track Finder
+Alex, Gailey, Jules
+#### Controls
+Mees, Philip
+
 ## Components specification
 Here every component's interface is further specified.
 This information should be enough to implement each node independently.
@@ -43,9 +55,16 @@ float32 x
 float32 y
 ```
 
+*track/Cone.msg*
+0 is blue cone (left) and 1 is yellow cone (right)
+```
+track/Point position
+int64 color 
+```
+
 *track/Cones.msg*
 ```
-track/Point[] cones
+track/Cone[] cones
 ```
 
 *track/Line.msg*
@@ -56,11 +75,11 @@ track/Point[] points
 *track/Track.msg*
 ```
 track/Line centreline
-track/Cones leftcones
-track/Cones rightcones
+track/Cones cones
 ```
 
 *car/Location.msg*
+heading in radians, with respect to the x-axis
 ```
 track/Point location
 float32 heading
@@ -77,9 +96,9 @@ float32 yawrate
 ### Topic definitions
 | Topic name | Description | Message type | 
 |---|---|---|
-| `/track` | The full track will be published here at the start of the simulation. | `track/Track.msg` |
 | `/car/location` | The location of the car will be published here. | `car/Location.msg` |
-| `/car/camera` | The cones visible of the cars will be published here. | `track/Cones.msg` |
+| `/track/cones` | Publishes all the cones of the track | `track/Cones.msg` |
+| `/car/camera` | The cones visible to the car will be published here. | `track/Cones.msg` |
 | `/car/targetline` | The line that the car should be following. | `track/Line.msg` |
 | `/car/controls` | Commands how the car should move. | `car/Control.msg` |
 
@@ -101,13 +120,12 @@ track/Track track
 * package: track
 * node name: coneplacer
 * node type: [service](http://wiki.ros.org/srv)
-* service name: `track/coneplacer`
+* service name: `/track/coneplacer`
 * service definition `ConePlacer.srv`
 ```
 track/Line centreline
 ---
-track/Cones leftcones
-track/Cones rightcones
+track/Cones cones
 ```
 
 #### Car: camera simulation
@@ -147,16 +165,23 @@ When a control command is received the car will be moved accordingly.
 ## Development
 To test the software being developed first run `echo "source <dir-of-autotoy>/devel/setup.bash" >> ~/.bashrc`. In a new terminal, navigate to the catkin workspace (this folder) and build the project with `catkin_make`.
 
+Whenever a change to the source code is made, there are a few common options to compile the code. One is the combination `catkin clean` followed by `catkin build` which wipes out the *build, devel and logs* folders and builds everything again. The other option which is used in the tutorials is to run `catkin_make` once. In some cases, like when the *devel* folder with the header files does not exist, some of these commands might have to be run twice.
+
 ## Running
 To run the project, start a ROS Master and run every node. Start the simulator last. Each should be started from a separate console:
 ```
-roscore
-
-rosrun track generator
-rosrun track coneplacer
-rosrun car camerasimulator
-rosrun car trackfinder
-rosrun car controller
-
-rosrun simulator main
+catkin init
+catkin clean
+catkin_make
+source devel/setup.bash
+roslaunch world.launch
 ```
+
+## Lessons learned
+* Would issues and features helped us?
+* Running in a Docker environment to not have issues of "runs on my machine" as experienced by Jules and David. 
+* Continous integration (or some basic unit tests) to make sure that master never has bugs and can be compiled (which was not the case after the PR from Sijmen and Edmundo) with the weird `include`.
+* Doing more frequent pull requests to master with updated msg, package and CMakeLists files which everyone has to share. 
+* Push code immendiately, especially before a period of absence.
+* More frequent PR to Master
+* Better skeleton structure to ensure that no message type changes have to be made in the middle of the project. For bigger projects it will be impossible to deal with this in a perfect way and we have to accept that sometimes these structural changes will have to be made.
