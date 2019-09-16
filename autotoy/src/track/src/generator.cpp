@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "track/Generator.h"
 #include "track/ConePlacer.h"
+#include "math.h"
 
 /* This script defines the functionality of the generator node which in essence 
 creates a client which requests a service to conesplacer by passing as request a generated centerline 
@@ -28,14 +29,24 @@ public:
     
     // Create points of the centerline and append them to the centerline vector
 
-    int i;
-    for(i=0; i<5; i++)
-    {
-      track::Point new_point;
-      new_point.x = (float)i;
-      new_point.y = (float)i;
+    
+    track::Point new_point;
+  
+    float theta = 0;
+    int h = 0;
+    int k = 10;
+    int r = 10;
+    float step=15*M_PI/180;
 
-      centerline_points.push_back(new_point);
+    while (theta < 2 * M_PI) {
+      new_point.x = (float) (h + r*cos(theta));
+      new_point.y = (float) (k + r*sin(theta));
+
+      centreline_points.push_back(new_point);
+      theta+=step;
+    }
+
+
     }
     
     centerline_line.points = centerline_points;
