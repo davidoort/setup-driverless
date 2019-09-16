@@ -15,12 +15,8 @@ public:
   ros::ServiceClient client;
   ros::ServiceServer service;
   
-
-  /* Generator() {
-    service = n.advertiseService("generate_track", &Generator::generate_track, this);
-  } */
   void start() {
-    service = n.advertiseService("generate_track", &Generator::generate_track, this);
+    service = n.advertiseService("/track/generate", &Generator::generate_track, this);
   }
 
   bool generate_track(track::Generator::Request& req, track::Generator::Response& res) //always has to be a bool
@@ -45,7 +41,7 @@ public:
     centerline_line.points = centerline_points;
 
     // Create client
-    ros::ServiceClient client = n.serviceClient<track::ConePlacer>("place_cones");
+    ros::ServiceClient client = n.serviceClient<track::ConePlacer>("/track/coneplacer");
     track::ConePlacer srv;
     srv.request.centreline = centerline_line;
 
@@ -66,7 +62,7 @@ public:
     }
     else
     {
-      ROS_ERROR("Failed to call the service place_cones");
+      ROS_ERROR("Failed to call the service /track/coneplacer");
       return false;
     }
   }
@@ -77,8 +73,8 @@ public:
 int main(int argc, char **argv)
 {
   // Init the node
-  ROS_INFO("Starting 'trackgenerator' node...");
-  ros::init(argc, argv, "trackgenerator");
+  ROS_INFO("Starting 'generator' node...");
+  ros::init(argc, argv, "generator");
 
   // Instantiate a Generator object
   Generator generator;
