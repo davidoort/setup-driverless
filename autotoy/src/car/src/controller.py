@@ -31,9 +31,18 @@ class Controller:
         error = self.target_line_angle - self.heading_angle
         
         # Convert error to yaw rate
-        # PID stuff...
-        acceleration = 4
-        yaw_rate = 1
+        yaw_rate = 0 # inital yaw rate
+        P = 0.5
+        yaw_rate = P*error
+
+        velocity = 0  # m/s, initial veclocity
+        velocity_ref = 5  # m/s
+        acceleration = 4  # m/s^2
+
+        if velocity < velocity_ref:
+            acceleration =+ .1
+        else:
+            acceleration = 0
         
         self.publisher.publish(acceleration, yaw_rate)        
               
