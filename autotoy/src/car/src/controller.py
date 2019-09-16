@@ -33,8 +33,8 @@ class Controller:
         yaw_rate = 0 # inital yaw rate
         P = 0.5
         yaw_rate = P*error
-        
-        Velocity = 0  # m/s, initial veclocity
+
+        velocity = 0  # m/s, initial veclocity
         velocity_ref = 5  # m/s
         acceleration = 4  # m/s^2
 
