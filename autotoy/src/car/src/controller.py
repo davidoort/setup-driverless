@@ -30,29 +30,31 @@ class Controller:
         error = self.target_line_angle - self.heading_angle
         
         # Convert error to yaw rate
-        yaw_rate = 1
-        
+        yaw_rate = 0 # inital yaw rate
+'''
         # PID stuff... pip install simple-pid
         from simple_pid import PID
         pid = PID(1, 0.1, 0.05, setpoint=1)
 
         # assume we have a system we want to control in controlled_system
-        v = controlled_system.update(0)
+        v = yaw_rate.update(0)
 
         while True:
         # compute new ouput from the PID according to the systems current value
         control = pid(v)
         # feed the PID output to the system and get its current value
-        v = controlled_system.update(control)
+        v = yaw_rate.update(control)
 
         pid.sample_time = 0.01  # update every 0.01 seconds
 
         while True:
-            output_yaw = pid(v)
+            yaw_rate = pid(current_value)
+'''
+        Velocity = 0  # m/s, initial veclocity
+        velocity_ref = 5  # m/s
+        acceleration = 4  # m/s^2
 
-
-        acceleration = 4
-        if straighline:
+        if velocity < velocity_ref:
             acceleration =+ .1
         else:
             acceleration = 0
@@ -78,5 +80,5 @@ class Controller:
 
 
 if __name__ == '__main__':    
-    c = Controller()
+    Controller()
     
