@@ -31,25 +31,9 @@ class Controller:
         
         # Convert error to yaw rate
         yaw_rate = 0 # inital yaw rate
-'''
-        # PID stuff... pip install simple-pid
-        from simple_pid import PID
-        pid = PID(1, 0.1, 0.05, setpoint=1)
-
-        # assume we have a system we want to control in controlled_system
-        v = yaw_rate.update(0)
-
-        while True:
-        # compute new ouput from the PID according to the systems current value
-        control = pid(v)
-        # feed the PID output to the system and get its current value
-        v = yaw_rate.update(control)
-
-        pid.sample_time = 0.01  # update every 0.01 seconds
-
-        while True:
-            yaw_rate = pid(current_value)
-'''
+        P = 0.5
+        yaw_rate = P*error
+        
         Velocity = 0  # m/s, initial veclocity
         velocity_ref = 5  # m/s
         acceleration = 4  # m/s^2
