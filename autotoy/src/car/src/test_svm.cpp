@@ -6,6 +6,7 @@
 #include "track/Line.h"
 
 
+
 int main(int argc, char **argv) {
 
   // Init node with name 'trackfinder'
@@ -17,11 +18,18 @@ int main(int argc, char **argv) {
   // Generate fake infomation - small set
 
     int n_cones  = 8;
-    int cones_col[n_cones] = { 1, 1, 1, -1, -1, -1, 1, -1 };
+    int cones_col[n_cones] = { 1, 1, 1, 0, 0, 0, 1, 0};
     float cones_pos[n_cones][2] = { { 100, 150 }, { 100, 450 }, { 200, 300 }, { 300, 150 }, { 300, 450 }, { 400, 300}, { 50, 50 },{ 250, 50 } };
     float cones_x[n_cones] = {100,100,200,300,300,400,50,250};
     float cones_y[n_cones] = {150,450,300,150,450,300,50,50};
 
+    ROS_INFO_STREAM("Randomly generated " << n_cones << "cones. ");
+    
+    for (int i = 0; i < n_cones; ++i){
+      int x = cones_x[i];
+      int y = cones_y[i];
+      ROS_INFO_STREAM("Cone " << i << ":  coordinates: (" << x << "," << y << ") color: " << cones_col[i]);
+    }
 
   /*
   // Generate fake Cone-set - Curved Path
@@ -77,62 +85,12 @@ int main(int argc, char **argv) {
     }
 
     cameraCones.cones = new_cones;
+    new_cones.clear();
     send_camera.publish(cameraCones);
+    
 
-    ROS_INFO_STREAM("Sending random cones to camera");
+    ROS_INFO_STREAM("Sending " << cameraCones.cones.size() << " random cones to camera.");
     rate.sleep();
   }
-
-
-
-
-  /*
-  int num_points = 10;
-  float power = 1.25;
-
-  int a[10];
-
-  std::vector<track::Cone> new_cones;
-  track::Cones send_cones;
-
-  // track::Cone new_cones[num_points*2];
-  ROS_INFO("Generating fake track...");
-
-  for(int i=0; i<num_points; i++){
-
-    track::Cone coneleft;
-    track::Cone coneright;
-
-    coneleft.position.x = pow(i, power);
-    coneleft.position.y = i;
-    coneleft.color = 0;
-
-    coneright.position.x = pow(i, power) + 10;
-    coneright.position.y = i;
-    coneright.color = 1;
-
-    new_cones.push_back(coneleft);
-    new_cones.push_back(coneright);
-
-    ROS_INFO("%f, %f", coneleft.position.x, coneleft.position.y);
-  }
-
-  ROS_INFO("Generated fake track");
-
-  send_cones.cones = new_cones;
-<<<<<<< HEAD
-  ros::Rate loop_rate(0.3);
-=======
-  send_camera.publish(send_cones);
   
->>>>>>> aebf0027918de9959998d149ec67e898aeddf6aa
-
-  while(ros::ok()){
-    send_track.publish(send_cones);
-
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
-  return 0;
-  */
 }
