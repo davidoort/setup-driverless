@@ -9,6 +9,11 @@ class Controller:
     def __init__(self):
         self.target_line_angle = 0
         self.heading_angle = 0
+        self.velocity = 0
+        self.velocity_ref = 5
+        self.acceleration = 4
+        self.yaw_rate = 0
+        
         
         # Initialise node
         rospy.init_node('controller')
@@ -31,20 +36,16 @@ class Controller:
         error = self.target_line_angle - self.heading_angle
         
         # Convert error to yaw rate
-        yaw_rate = 0 # inital yaw rate
         P = 0.5
-        yaw_rate = P*error
+        self.yaw_rate = P*error
 
-        velocity = 0  # m/s, initial veclocity
-        velocity_ref = 5  # m/s
-        acceleration = 4  # m/s^2
-
-        if velocity < velocity_ref:
-            acceleration =+ .1
+        if self.velocity < self.velocity_ref:
+            self.acceleration += 0.1
+            self.velocity_ref -= .1
         else:
-            acceleration = 0
+            self.acceleration = 0
         
-        self.publisher.publish(acceleration, yaw_rate)        
+        self.publisher.publish(self.acceleration, self.yaw_rate)        
               
     def target_line_callback(self, data):
         print('Received target line data')
