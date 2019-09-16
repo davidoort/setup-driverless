@@ -7,10 +7,10 @@
 #include <visualization_msgs/Marker.h>
 #include <cmath>
 
-void show_visible_cones()
+/*void show_visible_cones()
 {
 	ROS_INFO("Message detected");
-}
+}*/
 
 int main(int argc, char **argv)
 {
@@ -51,13 +51,13 @@ int main(int argc, char **argv)
 	  points.ns = "track_cones_location";
 	  points.action = visualization_msgs::Marker::ADD;
 	  points.id = 0;
-	  // points.type = visualization_msgs::Marker::POINTS;
-	  points.type = visualization_msgs::Marker::MESH_RESOURCE;
-      points.mesh_resource = "package://simulation/meshes/cone_blue.dae";
+	  points.type = visualization_msgs::Marker::POINTS;
+	  // points.type = visualization_msgs::Marker::MESH_RESOURCE;
+      // points.mesh_resource = "package://simulation/meshes/cone_blue.dae";
 
 	  points.scale.x = 0.2;
 	  points.scale.y = 0.2;
-	  //points.color.a = 1.0;
+	  points.color.a = 1.0;
 
 	 
 	  int z = 0;
