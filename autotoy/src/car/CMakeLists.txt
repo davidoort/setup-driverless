@@ -11,6 +11,7 @@ find_package(
   message_generation
   std_msgs
   roscpp
+  rospy
   track
 )
 
