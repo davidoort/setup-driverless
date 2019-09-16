@@ -184,4 +184,4 @@ roslaunch world.launch
 * Doing more frequent pull requests to master with updated msg, package and CMakeLists files which everyone has to share. 
 * Push code immendiately, especially before a period of absence.
 * More frequent PR to Master
-
+* Better skeleton structure to ensure that no message type changes have to be made in the middle of the project. For bigger projects it will be impossible to deal with this in a perfect way and we have to accept that sometimes these structural changes will have to be made.
