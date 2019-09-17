@@ -25,8 +25,8 @@ catkin_package(
   track
 )
 
-install(PROGRAMS scripts/key_teleop.py
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+#install(PROGRAMS scripts/key_teleop.py
+    #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 # ----- BUILD -----
 # Specifies additional locations of header files
