@@ -191,3 +191,6 @@ Choose 'Activate a computer'. For the `Host ID` you must set the mac-address whi
 So the license is bound to a mac-address. But by default, every docker container gets a new unique mac address. 
 To go around this, in every jenkins file the following mac-address is hard-coded: `f4:93:9f:f7:a8:71`. Choose that address as your `Host ID`.
 Set `Computer Login Name` to `root`. `Activation Label` doesnt matter, you can put there whatever you want.
+
+In jenkins the mosek license must be upload. This license is owned by mit, so ask Allen Wang for it.
+Place the license in `/root/mosek/mosek.lic` file.
