@@ -19,8 +19,8 @@
 using namespace std;
 
 // these parameters define the design of the camera of the car
-int fov = 120; //degrees
-int dof = 30; //meters
+int fov = 1.5; //radians
+int dof = 3; //meters
 int acc = 100;
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
@@ -45,15 +45,15 @@ public: //variables
     {
         vector<float> point_lst;
         float ang0;
-        ang0 = -(fov/2);
-        while(ang0 < fov/2)
+        ang0 = +(fov/2);
+        while(ang0 > -fov/2)
         {
             float real = position.heading + ang0;
-            float pointx = (position.location.x + dof*sin(real));
-            float pointy = (position.location.y + dof*cos(real));
+            float pointx = (position.location.x + dof*cos(real));
+            float pointy = (position.location.y + dof*sin(real));
             point_lst.push_back(pointx);
             point_lst.push_back(pointy);
-            ang0 = ang0 + (fov/acc);
+            ang0 = ang0 - (fov/acc);
         }
         return point_lst;
 
