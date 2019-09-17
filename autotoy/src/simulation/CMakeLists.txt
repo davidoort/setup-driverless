@@ -37,7 +37,5 @@ include_directories(${catkin_INCLUDE_DIRS})
 add_executable(god src/god.cpp)
 target_link_libraries(god ${catkin_LIBRARIES})
 
-add_executable(visualize_track src/visualize_track.cpp)
-target_link_libraries(visualize_track ${catkin_LIBRARIES})
 
 
