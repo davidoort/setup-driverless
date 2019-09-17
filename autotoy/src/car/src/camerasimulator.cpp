@@ -19,9 +19,9 @@
 using namespace std;
 
 // these parameters define the design of the camera of the car
-int fov = 120; //degrees
-int dof = 3; //meters
-int acc = 100;
+int fov = M_PI; //radians
+int dof = 5; //meters
+int acc = 300;
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
 class bullet
@@ -45,15 +45,15 @@ public: //variables
     {
         vector<float> point_lst;
         float ang0;
-        ang0 = -(fov/2);
-        while(ang0 < fov/2)
+        ang0 = +(fov/2);
+        while(ang0 > -fov/2)
         {
             float real = position.heading + ang0;
-            float pointx = (position.location.x + dof*sin(real));
-            float pointy = (position.location.y + dof*cos(real));
+            float pointx = (position.location.x + dof*cos(real));
+            float pointy = (position.location.y + dof*sin(real));
             point_lst.push_back(pointx);
             point_lst.push_back(pointy);
-            ang0 = ang0 + (fov/acc);
+            ang0 = ang0 - (fov/acc);
         }
         return point_lst;
 
@@ -69,7 +69,7 @@ public: //variables
             float p_y = lst[ind+1];
             float distance = abs((p_y-position.location.y)*cone.position.x - (p_x-position.location.x)*cone.position.y + p_x*position.location.y - p_y*position.location.x)
             /sqrt(pow((p_y-position.location.y), 2)+pow((p_x-position.location.x), 2));
-            if(distance < 0.1)
+            if(distance < 0.05)
             {        
                 cout << "cone detected" << endl;
                 return true;

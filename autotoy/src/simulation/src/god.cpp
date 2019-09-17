@@ -47,7 +47,7 @@ public:
 
 class Simulator {
 public:
-  ros::Publisher cones_pub, car_location_pub, track_pub, centreline_pub, car_vis_pub, cone_vis_pub;
+  ros::Publisher cones_pub, car_location_pub, track_pub, centreline_pub, car_vis_pub, cone_vis_pub, target_pub, yaw_vis_pub;
   ros::Subscriber car_cmd_sub, visible_cones_sub, target_path_sub;
   ros::NodeHandle n;
   Car* car;
@@ -136,7 +136,7 @@ public:
   p.z = z;
 
   if (cones.cones[i].color == 0){
-    pc.r =(float) 185/255; pc.g =(float) 200/255; pc.b =(float) 255/255; pc.a=0.5;        
+    pc.r =(float) 0/255; pc.g =(float) 200/255; pc.b =(float) 255/255; pc.a=0.5;        
   }
   else{
     pc.r =(float) 255/255; pc.g =(float) 255/255; pc.b =(float) 192/255; pc.a=0.5;
@@ -170,47 +170,73 @@ public:
   {
     
     car_vis_pub =  n.advertise<visualization_msgs::Marker>("car_visualization", 100);
+    yaw_vis_pub =  n.advertise<visualization_msgs::Marker>("yaw_visualization", 100);
     uint32_t shape = visualization_msgs::Marker::SPHERE;
 
-    visualization_msgs::Marker marker;
+    visualization_msgs::Marker marker, yaw_arrow;
     // Set the frame ID and timestamp.  See the TF tutorials for information on these.
-    marker.header.frame_id = "/cones";
-    marker.header.stamp = ros::Time::now();
+    marker.header.frame_id = yaw_arrow.header.frame_id = "/cones";
+    marker.header.stamp = yaw_arrow.header.stamp = ros::Time::now();
 
     // Set the namespace and id for this marker.  This serves to create a unique ID
     // Any marker sent with the same namespace and id will overwrite the old one
-    marker.ns = "car_location";
-    marker.id = 2;
+    marker.ns = yaw_arrow.ns = "car_location";
+    marker.id = yaw_arrow.id = 2;
 
     // Set the marker type. 
     marker.type = shape;
+    yaw_arrow.type = visualization_msgs::Marker::ARROW;
 
     // Set the marker action.  Options are ADD, DELETE, and new in ROS Indigo: 3 (DELETEALL)
-    marker.action = visualization_msgs::Marker::ADD;
+    marker.action = yaw_arrow.action = visualization_msgs::Marker::ADD;
 
     // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-    marker.pose.position.x = location.location.x;
-    marker.pose.position.y = location.location.y;
-    marker.pose.position.z = 0.4;
+    //marker.pose.position.x = yaw_arrow.pose.position.x = location.location.x;
+    marker.pose.position.x = yaw_arrow.pose.position.x = location.location.x;
+    marker.pose.position.y = yaw_arrow.pose.position.y = location.location.y;
+    marker.pose.position.z = yaw_arrow.pose.position.z = 0.4;
     marker.pose.orientation.x = 0.0;
     marker.pose.orientation.y = 0.0;
     marker.pose.orientation.z = 0.0;
-    marker.pose.orientation.w = 1.0;
+    marker.pose.orientation.w = 0.0;
+
+    // yaw (Z), pitch (Y), roll (X)
+    double yaw = location.heading;
+    double pitch = 0.0;
+    double roll = 0.0;
+
+    double cy = cos(yaw * 0.5);
+    double sy = sin(yaw * 0.5);
+    double cp = cos(pitch * 0.5);
+    double sp = sin(pitch * 0.5);
+    double cr = cos(roll * 0.5);
+    double sr = sin(roll * 0.5);
+
+    yaw_arrow.pose.orientation.x = cy * cp * sr - sy * sp * cr;
+    yaw_arrow.pose.orientation.y = sy * cp * sr + cy * sp * cr;
+    yaw_arrow.pose.orientation.z = sy * cp * cr - cy * sp * sr;
+    yaw_arrow.pose.orientation.w = cy * cp * cr + sy * sp * sr;
 
     // Set the scale of the marker -- 1x1x1 here means 1m on a side
-    marker.scale.x = 1.0;
-    marker.scale.y = 1.0;
-    marker.scale.z = 1.0;
+    marker.scale.x  =1.0;
+    marker.scale.y  =1.0;
+    marker.scale.z  =1.0;
+    yaw_arrow.scale.x =2.0;
+    yaw_arrow.scale.y =0.2;
+    yaw_arrow.scale.z =0.2;
 
     // Set the color -- be sure to set alpha to something non-zero!
     marker.color.r = 0.0f;
     marker.color.g = 1.0f;
     marker.color.b = 0.0f;
     marker.color.a = 0.5;
+    yaw_arrow.color.r = 1.0f;
+    yaw_arrow.color.a = 1.0;
 
-    marker.lifetime = ros::Duration();
+    marker.lifetime = yaw_arrow.lifetime = ros::Duration();
 
     car_vis_pub.publish(marker);
+    yaw_vis_pub.publish(yaw_arrow);
     ROS_INFO("Updated car location!");
 
     //sleep(3); 
@@ -271,10 +297,10 @@ public:
     p.z = z;
 
     if (visible_cones.cones[i].color == 0){
-      pc.r =(float) 185/255; pc.g =(float) 200/255; pc.b =(float) 255/255; pc.a=0.5;        
+      pc.r =(float) 0/255; pc.g =(float) 200/255; pc.b =(float) 255/255; pc.a=1;        
     }
     else{
-      pc.r =(float) 255/255; pc.g =(float) 255/255; pc.b =(float) 192/255; pc.a=0.5;
+      pc.r =(float) 255/255; pc.g =(float) 255/255; pc.b =(float) 0/255; pc.a=1;
     }
 
     cones.points.push_back(p);
@@ -288,9 +314,39 @@ public:
   }
 
   void targetPathReceived(const track::Line& target_path) {
-    
     // Show these cones in RViz
     ROS_INFO("Received target path!");
+    target_pub = n.advertise<visualization_msgs::Marker>("target_visualization", 100); 
+
+    visualization_msgs::Marker target_line;
+    target_line.header.frame_id = "/cones";
+    target_line.header.stamp = ros::Time::now();
+    target_line.ns = "track_cones_location";
+    target_line.action = visualization_msgs::Marker::ADD;
+    target_line.pose.orientation.w = 1.0;
+    target_line.id = 5;
+    target_line.type = visualization_msgs::Marker::LINE_STRIP;
+    target_line.scale.x = 0.1;
+    target_line.color.b = 1.0;
+    target_line.color.a = 1.0;
+
+
+    int z = 0;
+
+    target_line.lifetime = ros::Duration();
+    int targetline_size = target_path.points.size();
+    
+    for (int t=0; t<targetline_size; t++){
+      geometry_msgs::Point c;
+      c.x = target_path.points[t].x;
+      c.y = target_path.points[t].y;
+      c.z = z;
+      target_line.points.push_back(c);
+    }
+
+    // line_strip.points = target_path.points;
+    target_pub.publish(target_line);
+    ROS_INFO("Target path generated.");
   }
 
   void setCar(Car* newCar) {
