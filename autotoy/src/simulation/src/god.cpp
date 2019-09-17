@@ -191,7 +191,6 @@ public:
     marker.action = yaw_arrow.action = visualization_msgs::Marker::ADD;
 
     // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-    //marker.pose.position.x = yaw_arrow.pose.position.x = location.location.x;
     marker.pose.position.x = yaw_arrow.pose.position.x = location.location.x;
     marker.pose.position.y = yaw_arrow.pose.position.y = location.location.y;
     marker.pose.position.z = yaw_arrow.pose.position.z = 0.4;
@@ -273,19 +272,6 @@ public:
     int z = 0;
 
     cones.lifetime = ros::Duration();
-
-    /*// Wait untill there is at least one subsriber to publish
-    while (track_pub.getNumSubscribers() < 1 && centreline_pub.getNumSubscribers() < 1)
-    {
-    if (!ros::ok())
-    {
-      return 0;
-    }
-    ROS_WARN_ONCE("Please create a subscriber. Run rviz.");
-    sleep(1);
-    }*/
-
-
     int size = visible_cones.cones.size();
     for (int i=0; i<size; i++){
     //ROS_INFO("%f, %f, %i", cones.cones[i].position.x, cones.cones[i].position.y, cones.cones[i].color);
