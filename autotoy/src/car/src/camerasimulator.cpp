@@ -33,8 +33,8 @@ public:
     {
         vector<float> point_lst;
         float ang0;
-        ang0 = -(fov/2);
-        while(ang0 < fov/2)
+        ang0 = +(fov/2);
+        while(ang0 > -fov/2)
         {
             float real = position.heading + ang0;
             float pointx = (position.location.x + dof*cos(real));
