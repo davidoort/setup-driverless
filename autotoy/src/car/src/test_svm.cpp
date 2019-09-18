@@ -109,11 +109,11 @@ int main(int argc, char **argv) {
     // coneright.position.y = i*10 + y_offset;
     // coneright.color = 1;
 
-    coneleft.position.y = 100;
-    coneleft.position.x = i*100;
-    coneright.color = 1;
-    coneright.position.y = 200;
-    coneright.position.x = i*100;
+    coneleft.position.y = i*100;
+    coneleft.position.x = 100;
+    coneright.color = 0;
+    coneright.position.y = i*100;
+    coneright.position.x = 200;
     coneright.color = 1;
 
     new_cones.push_back(coneleft);

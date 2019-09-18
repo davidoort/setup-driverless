@@ -33,8 +33,8 @@ public:
 
   void start() {
     // Start listening on the '/car/camera' topic
-    car_loc_subs = nodeHandle.subscribe("/car/location", 1000, &TrackFinder::storeCarLoc, this);
-    subscriber = nodeHandle.subscribe("/car/camera", 1000, &TrackFinder::didReceiveCones, this);
+    car_loc_subs = nodeHandle.subscribe("/car/locationtest", 1000, &TrackFinder::storeCarLoc, this);
+    subscriber = nodeHandle.subscribe("/car/cameratest", 1000, &TrackFinder::didReceiveCones, this);
   }
 
   void storeCarLoc(const car::Location::ConstPtr& location){
@@ -229,7 +229,7 @@ public:
         int width = 512, height = 512;
         Mat image = Mat::zeros(height, width, CV_8UC3);
 
-        Vec3b green(0, 255, 0), blue(255, 0, 0), other(0, 0, 255);
+        Vec3b green(0, 255, 0), blue(255, 0, 0), other(0, 0, 255), pink(250, 118, 158);
 
         // Show the decision regions given by the SVM
         for (int i = -y_min; i < image.rows -y_min; ++i)
@@ -240,7 +240,7 @@ public:
             float response = svm->predict(sampleMat);
 
             if (response == 1)
-                image.at<Vec3b>(i+y_min, j+x_min) = green;
+                image.at<Vec3b>(i+y_min, j+x_min) = pink;
             else if (response == -1)
                 image.at<Vec3b>(i+y_min, j+x_min) = blue;
           }
