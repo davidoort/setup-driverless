@@ -84,12 +84,8 @@ int main(int argc, char **argv) {
   */
 
 
-
-
-  int num_points = 10;
+  int num_points = 4;
   float power = 1.25;
-
-  int a[10];
 
   int y_offset = 100;
   int x_offset = 80;
@@ -105,12 +101,19 @@ int main(int argc, char **argv) {
     track::Cone coneleft;
     track::Cone coneright;
 
-    coneleft.position.x = pow(i, power)*20 + x_offset;
-    coneleft.position.y = i*10 + y_offset;
-    coneleft.color = 0;
+    // coneleft.position.x = pow(i, power)*20 + x_offset;
+    // coneleft.position.y = i*10 + y_offset;
+    // coneleft.color = 0;
 
-    coneright.position.x = pow(i, power)*50 + 50 +x_offset;
-    coneright.position.y = i*10 + y_offset;
+    // coneright.position.x = pow(i, power)*50 + 50 +x_offset;
+    // coneright.position.y = i*10 + y_offset;
+    // coneright.color = 1;
+
+    coneleft.position.y = 100;
+    coneleft.position.x = i*100;
+    coneright.color = 1;
+    coneright.position.y = 200;
+    coneright.position.x = i*100;
     coneright.color = 1;
 
     new_cones.push_back(coneleft);
@@ -120,6 +123,7 @@ int main(int argc, char **argv) {
   }
 
   ROS_INFO("Generated fake track");
+
 
   send_cones.cones = new_cones;
   ros::Rate loop_rate(0.3);
