@@ -6,10 +6,8 @@
 #include "track/Cone.h"
 #include "track/Cones.h"
 #include "track/Generator.h"
-#include "car/Location.h"
-#include "car/Control.h"
-#include <tuple>
-#include <fstream>
+#include "track/Line.h"
+#include "visualization_msgs/Marker.h"
 
 /* 
 This script is supposed to define the functionality of the "GodNode" which is the simulator. 
@@ -21,11 +19,6 @@ This script is supposed to define the functionality of the "GodNode" which is th
 
 // in seconds
 #define timeBetweenTick 0.1
-
-void writetofile()
-{
-
-}
 
 class Car {
 public:
