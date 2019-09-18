@@ -23,20 +23,20 @@ void  conePlacer(const std::vector<track::Point> &centreline, std::vector<track:
   track::Cone* new_cone_left = new track::Cone; // to store temporary point for left cones
   track::Cone* new_cone_right = new track::Cone; // to store temporary point for right cones
 
-  for(int i = 0; i < length; i++)
+  for(int i = 0; i < length-1; i++)
   {
     // check if at beginning, middle, or end of the array
     if(i == 0) //first point
     {
-      direction[0] = centreline[1].x - centreline[0].x; //change in x
-      direction[1] = centreline[1].y - centreline[0].y; //change in y
+      direction[0] = centreline[1].x - centreline[length-1].x; //change in x
+      direction[1] = centreline[1].y - centreline[length-1].y; //change in y
     }
 
-    else if(i == length-1) //final point
-    {
-      direction[0] = centreline[length-1].x - centreline[length-2].x; //change in x
-      direction[1] = centreline[length-1].y - centreline[length-2].y; //change in y
-    }
+    // else if(i == length-1) //final point
+    // {
+    //   direction[0] = centreline[length-1].x - centreline[length-2].x; //change in x
+    //   direction[1] = centreline[length-1].y - centreline[length-2].y; //change in y
+    // }
 
     else //middle point
     {
