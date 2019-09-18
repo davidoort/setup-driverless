@@ -33,8 +33,8 @@ public:
 
   void start() {
     // Start listening on the '/car/camera' topic
-    car_loc_subs = nodeHandle.subscribe("/car/locationtest", 1000, &TrackFinder::storeCarLoc, this);
-    subscriber = nodeHandle.subscribe("/car/cameratest", 1000, &TrackFinder::didReceiveCones, this);
+    car_loc_subs = nodeHandle.subscribe("/car/location", 1000, &TrackFinder::storeCarLoc, this);
+    subscriber = nodeHandle.subscribe("/car/camera", 1000, &TrackFinder::didReceiveCones, this);
   }
 
   void storeCarLoc(const car::Location::ConstPtr& location){
