@@ -2,44 +2,41 @@
 #include "track/Line.h"
 #include "car/Control.h"
 #include "car/Location.h"
+#include "car/Velocity.h"
 
 
 class Controller {
   
-  ros::NodeHandle n;
+  ros::NodeHandle nodeHandler;
   ros::Publisher publisher;
   ros::Subscriber targetLineSub;
   ros::Subscriber locationSub;
+  ros::Subscriber velocitySub;
   
   public:
     float targetLineAngle, headingAngle, velocity, velocityRef, acceleration, yawRate;
     
     // Constructor
     Controller() {      
-      targetLineAngle, headingAngle, velocity, yawRate = 0;
-      velocityRef = 5;
-      acceleration = 4; 
+      targetLineAngle, headingAngle, velocity, yawRate, acceleration = 0;
+      velocityRef = 5; // m/s
       
       // Inititate publisher and subscribers
-      publisher = n.advertise<car::Control>("car/controls", 1000);
-      targetLineSub = n.subscribe("car/targetline", 1000, &Controller::targetLineCallback, this);
-      locationSub = n.subscribe("car/location", 1000, &Controller::locationCallback, this);  
+      publisher = nodeHandler.advertise<car::Control>("car/controls", 1000);
+      targetLineSub = nodeHandler.subscribe("car/targetline", 1000, &Controller::targetLineCallback, this);
+      locationSub = nodeHandler.subscribe("car/location", 1000, &Controller::locationCallback, this); 
+      velocitySub = nodeHandler.subscribe("car/velocity", 1000, &Controller::velocityCallback, this);
     };
     
     void talker() {
-      float error = targetLineAngle - headingAngle;
+      float headingError = targetLineAngle - headingAngle;
+      float velocityError = velocityRef - velocity;
       
+      // Proportional control
       float Kp = 0.5;
-      yawRate = Kp * error;
-      
-      if (velocity < velocityRef) {
-        acceleration += 0.1;
-        velocityRef -= 0.1;
-      }
-      else {
-        acceleration = 0; 
-      }
-      
+      yawRate = Kp * headingError;
+      acceleration = Kp * velocityError;
+            
       car::Control message;
       message.acceleration = acceleration;
       message.yawrate = yawRate;            
@@ -67,6 +64,12 @@ class Controller {
       
       headingAngle = message.heading;
     }  
+    
+    void velocityCallback(const car::Velocity& message) {
+      ROS_INFO("Received current velocity");
+      
+      velocity = message.velocity;
+    }
   
 };
 

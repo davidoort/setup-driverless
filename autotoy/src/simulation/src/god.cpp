@@ -2,6 +2,7 @@
 #include "track/Generator.h"
 #include "car/Location.h"
 #include "car/Control.h"
+#include "car/Velocity.h"
 #include <tuple>
 
 /* 
@@ -46,7 +47,7 @@ public:
 
 class Simulator {
 public:
-  ros::Publisher cones_pub, car_location_pub;
+  ros::Publisher cones_pub, car_location_pub, car_velocity_pub;
   ros::Subscriber car_cmd_sub, visible_cones_sub, target_path_sub;
   Car* car;
 
@@ -125,6 +126,7 @@ int main(int argc, char **argv)
 
   // Initialize publishers and subscribers
   simulator.car_location_pub = nodeHandler.advertise<car::Location>("/car/location", 100);
+  simulator.car_velocity_pub = nodeHandler.advertise<car::Velocity>("car/velocity", 100);
 
   simulator.car_cmd_sub = nodeHandler.subscribe("/car/controls", 100, &Simulator::controlCommandReceived, &simulator); // Not sure if the first & is needed
   simulator.visible_cones_sub = nodeHandler.subscribe("/car/camera", 100, &Simulator::visableConesReceived, &simulator);
@@ -136,12 +138,17 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     car.move();
+    
     car::Location location;
+    car::Velocity velocity;
+    
     location.location.x = car.x;
     location.location.y = car.y;
     location.heading = car.heading;
+    velocity.velocity = car.velocity;
 
     simulator.car_location_pub.publish(location);
+    simulator.car_velocity_pub.publish(velocity);
 
     ros::spinOnce();
     loop_rate.sleep();
