@@ -312,8 +312,8 @@ public:
     target_line.pose.orientation.w = 1.0;
     target_line.id = 5;
     target_line.type = visualization_msgs::Marker::LINE_STRIP;
-    target_line.scale.x = 0.1;
-    target_line.color.b = 1.0;
+    target_line.scale.x = 0.3;
+    target_line.color.r = 1.0;
     target_line.color.a = 1.0;
 
 
