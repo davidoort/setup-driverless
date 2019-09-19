@@ -1,45 +1,31 @@
 
-#include "ros/ros.h"
-#include "track/Cones.h"
-#include "car/Location.h"
+#include "vector"
 #include <math.h>
 #include <sstream>
 
 using namespace std;
 
 // these parameters define the design of the camera of the car
-int fov = 120; //degrees
-int dof = 30;
-int acc = 100;
+int heading = 0.5; //radians
+int fov = 1; //radians
+int dof = 3; //meters
+int acc = 300;
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
 class bullet
 {
 public: //variables
 
-    vector<float> get_orientation(float angle, pair <float,float> position)
-    {
-        float nose_x = position.first + 1.5*sin(angle); //add here core using angle
-        float nose_y = position.second + 1.5*cos(angle);
-        float tail_x = position.first - 1.5*sin(angle);
-        float tail_y = position.second - 1.5*cos(angle);
-        vector<float> pos;
-        pos.push_back(nose_x);
-        pos.push_back(nose_y);
-        pos.push_back(tail_x);
-        pos.push_back(tail_y);
-        return pos;
-    }
-    vector<float> activate(float fov, float dof, float acc, car::Location position)
+    vector<float> activate(float fov, float dof, float acc, float heading, float xcar, float ycar)
     {
         vector<float> point_lst;
         float ang0;
         ang0 = +(fov/2);
         while(ang0 > -fov/2)
         {
-            float real = position.heading + ang0;
-            float pointx = (position.location.x + dof*cos(real));
-            float pointy = (position.location.y + dof*sin(real));
+            float real = heading + ang0;
+            float pointx = (xcar + dof*cos(real));
+            float pointy = (ycar + dof*sin(real));
             point_lst.push_back(pointx);
             point_lst.push_back(pointy);
             ang0 = ang0 - (fov/acc);
@@ -47,17 +33,17 @@ public: //variables
         return point_lst;
 
     }
-    bool detect(track::Cone cone, vector<float> lst, car::Location position, float acc)
+    bool detect(float conex, float coney, vector<float> lst, float posx, float posy, float acc)
     {
-        float cone_loc[2] = {cone.position.x, cone.position.y};
+        float cone_loc[2] = {conex, coney};
         float ind = 0;
         float cone_found = 0;
         while(ind < acc)
         {
             float p_x = lst[ind];
             float p_y = lst[ind+1];
-            float distance = abs((p_y-position.location.y)*cone.position.x - (p_x-position.location.x)*cone.position.y + p_x*position.location.y - p_y*position.location.x)
-            /sqrt(pow((p_y-position.location.y), 2)+pow((p_x-position.location.x), 2));
+            float distance = abs((p_y-posy)*conex - (p_x-posx)*coney + p_x*posy - p_y*posx)
+            /sqrt(pow((p_y-posy), 2)+pow((p_x-posx), 2));
             if(distance < 0.1)
             {        
                 cout << "cone detected" << endl;
@@ -70,18 +56,21 @@ public: //variables
     }
 };
 
-// DEMO DATA: not for the final code, just to test if the code works
+// demo data
+float xcar = 0;
+float ycar = 0;
 
+// make a list of cones
+vector<float> cones;
 
 
 int main(int argc, char **argv)
 {
     // initialize the car
     bullet dut;
-
-    vector<float> view_lst = dut.activate(fov, orientation, dof, acc, position);
-    float detection = dut.detect(cones[0], cones[1], view_lst, position, acc);
-    cout << detection << endl;
+    vector<float> list = dut.activate(fov, dof, acc, heading, xcar, ycar);
+    
+    cout << list << endl;
 
     return 0;
 
