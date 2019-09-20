@@ -21,6 +21,7 @@ add_message_files(
   FILES
   Control.msg
   Location.msg
+  Velocity.msg
 )
 
 # Specify external message dependencies

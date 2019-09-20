@@ -32,13 +32,13 @@ public:
     
     track::Point new_point;
   
-    float theta = 0;
+    float theta = -M_PI/2;
     int h = 0;
-    int k = 10;
-    int r = 10;
+    int r = 20;
+    int k = r;
     float step=15*M_PI/180;
 
-    while (theta < 2 * M_PI) {
+    while (theta < 3 * M_PI/2) {
       new_point.x = (float) (h + r*cos(theta));
       new_point.y = (float) (k + r*sin(theta));
 
