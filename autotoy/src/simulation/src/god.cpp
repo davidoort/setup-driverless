@@ -1,13 +1,15 @@
-#include <array>
-#include "car/Location.h"
-#include "car/Control.h"
-#include <cmath>
 #include "ros/ros.h"
 #include "track/Cone.h"
 #include "track/Cones.h"
 #include "track/Generator.h"
 #include "track/Line.h"
-#include "visualization_msgs/Marker.h"
+#include "car/Location.h"
+#include "car/Control.h"
+#include "car/Velocity.h"
+#include <tuple>
+#include <cmath>
+#include <array>
+#include <visualization_msgs/Marker.h>
 
 /* 
 This script is supposed to define the functionality of the "GodNode" which is the simulator. 
@@ -47,7 +49,7 @@ public:
 
 class Simulator {
 public:
-  ros::Publisher cones_pub, car_location_pub, track_pub, centreline_pub, car_vis_pub, cone_vis_pub, target_pub, yaw_vis_pub;
+  ros::Publisher cones_pub, car_location_pub, track_pub, centreline_pub, car_vis_pub, cone_vis_pub, target_pub, yaw_vis_pub, car_velocity_pub;
   ros::Subscriber car_cmd_sub, visible_cones_sub, target_path_sub;
   ros::NodeHandle n;
   Car* car;
@@ -365,6 +367,7 @@ int main(int argc, char **argv)
   //ros::Publisher car_pub = n.advertise<visualization_msgs::Marker>("car_visualization", 100);
 
   // Initialize publishers and subscribers
+  simulator.car_velocity_pub = simulator.n.advertise<car::Velocity>("car/velocity", 100);
   simulator.car_location_pub = simulator.n.advertise<car::Location>("/car/location", 100);
 
   simulator.car_cmd_sub = simulator.n.subscribe("/car/controls", 100, &Simulator::controlCommandReceived, &simulator); // Not sure if the first & is needed
@@ -377,12 +380,17 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     car.move();
+    
     car::Location location;
+    car::Velocity velocity;
+    
     location.location.x = car.x;
     location.location.y = car.y;
     location.heading = car.heading;
+    velocity.velocity = car.velocity;
 
     simulator.car_location_pub.publish(location);
+    simulator.car_velocity_pub.publish(velocity);
     simulator.publish_car(simulator.n, location);
 
     ros::spinOnce();
