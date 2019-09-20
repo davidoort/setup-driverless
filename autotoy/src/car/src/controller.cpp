@@ -3,6 +3,9 @@
 #include "car/Control.h"
 #include "car/Location.h"
 #include "car/Velocity.h"
+#include <vector>
+
+using namespace std;
 
 
 class Controller {
@@ -46,17 +49,22 @@ class Controller {
     void targetLineCallback(const track::Line& message) {
       ROS_INFO("Received target line data");
       
-      float currentPoint[2] = {message.points[0].x, message.points[0].y};
-      float nextPoint[2] = {message.points[1].x, message.points[1].y};
-      
-      float angle = atan((nextPoint[1] - currentPoint[1]) / (nextPoint[0] - currentPoint[0]));
-      if (angle < 0) {
-        angle += 180;
-      }
-      
-      targetLineAngle = angle;
-      
-      talker();
+      try {
+        vector<float> currentPoint = {message.points[0].x, message.points[0].y};
+        vector<float> nextPoint = {message.points[1].x, message.points[1].y};
+        
+        float angle = atan((nextPoint.at(1) - currentPoint.at(1)) / (nextPoint.at(0) - currentPoint.at(0)));
+        if (angle < 0) {
+          angle += 180;
+        }
+        
+        targetLineAngle = angle;
+        
+        talker();
+        }
+        catch (const out_of_range& e) {
+          ROS_ERROR("Received target line array is empty");
+        }
     }
     
     void locationCallback(const car::Location& message) {
