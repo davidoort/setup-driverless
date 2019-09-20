@@ -59,37 +59,43 @@
 
 Open a terminal and run the following commands. Make sure you replace `github_username` and `github_email` with your personal details. 
 
-	$ sudo apt-get update
-	$ sudo apt-get install git -y
-	$ git config --global user.name "github_username"
-	$ git config --global user.email "github_email"
-	
+```
+sudo apt-get update
+sudo apt-get install git -y
+git config --global user.name "github_username"
+git config --global user.email "github_email"
+```
+
 Next, we are going to generate an SSH key and add it to your github account. When you run the following command, just hit enter when it asks where to store the SSH key and for a passphrase.
 
-	$ ssh-keygen -t rsa -b 4096 -C "github_email@example.com"
-	
+```
+ssh-keygen -t rsa -b 4096 -C "github_email@example.com"
+```	
 Then add your newly generated SSH key to the ssh-agent.
-
-	$ eval "$(ssh-agent -s)"
-	$ ssh-add ~/.ssh/id_rsa
-	
+```
+eval "(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+```
 Finally, add your public SSH key to your github account. Run the following command and copy the content. This is your public SSH key, which start with 'ssh-rsa' and ends with your email adress.
-
-	$ cat ~/.ssh/id_rsa.pub
-	
+```
+cat ~/.ssh/id_rsa.pub
+```	
 Now go to github > settings > SSH and GPG keys > new SSH key. Paste your public SSH here and hit 'Add SSH key'. Now you're ready to clone the repository.
-
-	$ cd ~/
-	$ mkdir git
-	$ cd git
-	$ git clone git@github.com:davidoort/setup-driverless.git
+```
+cd ~/
+mkdir git
+cd git
+git clone git@github.com:davidoort/setup-driverless.git
+```
 
 Now, you need to ENABLE ROS REPOSITORIES. Go to the Software and Updates application on ubuntu and Other Software. Click on Canonical Partners!
 
 Then go to the terminal and run:
 
-	$ cd
-	$ bash git/setup-driverless/init.sh
+```
+cd
+bash git/setup-driverless/install.sh
+```
 
 The installation process should begin. The `init.sh` file will install the following by default:
 
@@ -120,7 +126,7 @@ Additionally, inside of VS Code, press `Ctrl`+`Shift`+`P` and search for C/C++ E
 
 ``` 
 /opt/ros/melodic/include
-${workspaceFolder}/** 
+{workspaceFolder}/** 
 ```
 
 If you want to setup autosave in VS Code then search for (`Ctrl`+`Shift`+`P`) *Open Settings (JSON)* and add the following lines to the end of the .json file:
