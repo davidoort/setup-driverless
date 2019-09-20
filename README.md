@@ -94,19 +94,19 @@ Then go to the terminal and run:
 
 ```
 cd
-bash git/setup-driverless/install.sh
+bash git/setup-driverless/install_basic.sh
 ```
 
-The installation process should begin. The `init.sh` file will install the following by default:
+The installation process should begin. The `install_basic.sh` file will install the following by default:
 
 * Docker
 * Python 3
 * ROS Melodic (including C++ compilers)
 * Gazebo
-* Visual Studio Code (for helping each other out, it will be extremely useful to use the same IDE)
 
 You will additionally be prompted to install the following optional (and recommended) applications:
 
+* Visual Studio Code (for helping each other out, it will be extremely useful to use the same IDE)
 * Terminator
 * Vim
 * Zsh
