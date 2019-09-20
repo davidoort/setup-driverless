@@ -79,21 +79,42 @@ wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
 #You need to enable package repository in your system. Create a new file 
 
+
+## Terminator 
 blank_line
-echo "Installing Visual Studio Code..." $'\n'
+echo -e "Install VS Code (Delft IDE)? [y/n]"
+read vscode
+
+if [ $vscode = 'y']
+then
+    blank_line
+    echo "Installing Visual Studio Code..." $'\n'
+    blank_line
+
+    sudo touch /etc/apt/sources.list.d/vscode.list
+    #echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
+    echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+
+
+    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+    sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+
+    sudo apt-get update
+    sudo apt-get install code -y
+fi
+
 blank_line
+echo -e "Install Sublime? [y/n]"
+read sublime
 
-sudo touch /etc/apt/sources.list.d/vscode.list
-#echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
-echo "deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
-
-
-curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-
-sudo apt-get update
-sudo apt-get install code -y
-
+if [ $sublime = 'y']
+then
+    #Install Sublime
+    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+    sudo apt-get update
+    sudo apt-get install sublime-text
+fi 
 
 ## Terminator 
 blank_line
@@ -158,11 +179,6 @@ then
 
 fi
 
-## CI computer? 
-
-# Jenkins
-
-# Matlab
 
 # Slack
 
