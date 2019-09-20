@@ -61,10 +61,10 @@ class Controller {
         targetLineAngle = angle;
         
         talker();
-        }
-        catch (const out_of_range& e) {
-          ROS_ERROR("Received target line array is empty");
-        }
+      }
+      catch (const out_of_range& e) {
+        ROS_ERROR("Received target line array is empty");
+      }
     }
     
     void locationCallback(const car::Location& message) {
