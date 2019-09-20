@@ -3,7 +3,7 @@
   <node name="trackgenerator" pkg="track" type="generator" output="screen"/>
   <node name="carcamerasimulator" pkg="car" type="camerasimulator" output="screen"/>
   <node name="cartrackfinder" pkg="car" type="trackfinder" output="screen"/>
-  <node name="carcontroller" pkg="car" type="controller.py" output="screen"/>
+  <node name="carcontroller" pkg="car" type="controller" output="screen"/>
   <node name="simulation" pkg="simulation" type="god" output="screen"/>
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find simulation)/src/configuration.rviz" />
 </launch>

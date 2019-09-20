@@ -129,13 +129,6 @@ Additionally, inside of VS Code, press `Ctrl`+`Shift`+`P` and search for C/C++ E
 {workspaceFolder}/** 
 ```
 
-If you want to setup autosave in VS Code then search for (`Ctrl`+`Shift`+`P`) *Open Settings (JSON)* and add the following lines to the end of the .json file:
-
-``` 
-"files.autoSave": "afterDelay",
-"files.autoSaveDelay": 100
-```
-
 
 ## Jenkins Server installation
 1. Install ubuntu (minimal install is fine)

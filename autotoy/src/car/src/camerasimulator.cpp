@@ -19,8 +19,8 @@
 using namespace std;
 
 // these parameters define the design of the camera of the car
-int fov = M_PI; //radians
-int dof = 5; //meters
+int fov = M_PI/2.0; //radians
+int dof = 1; //meters
 int acc = 300;
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
