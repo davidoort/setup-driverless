@@ -22,7 +22,7 @@ class Controller {
     // Constructor
     Controller() {      
       targetLineAngle, headingAngle, velocity, yawRate, acceleration = 0;
-      velocityRef = 5; // m/s
+      velocityRef = 3; // m/s
       
       // Inititate publisher and subscribers
       publisher = nodeHandler.advertise<car::Control>("car/controls", 1000);
@@ -36,9 +36,10 @@ class Controller {
       float velocityError = velocityRef - velocity;
       
       // Proportional control
-      float Kp = 0.5;
-      yawRate = Kp * headingError;
-      acceleration = Kp * velocityError;
+      float Kp_yaw = 1.;
+      float Kp_a = 0.5;
+      yawRate = Kp_yaw * headingError;
+      acceleration = Kp_a * velocityError;
             
       car::Control message;
       message.acceleration = acceleration;
@@ -49,22 +50,20 @@ class Controller {
     void targetLineCallback(const track::Line& message) {
       ROS_INFO("Received target line data");
       
-      try {
+      if (message.points.size() > 0) {
         vector<float> currentPoint = {message.points[0].x, message.points[0].y};
         vector<float> nextPoint = {message.points[1].x, message.points[1].y};
         
-        float angle = atan((nextPoint.at(1) - currentPoint.at(1)) / (nextPoint.at(0) - currentPoint.at(0)));
+        float angle = atan((nextPoint[1] - currentPoint[1]) / (nextPoint[0] - currentPoint[0] + 0.001));
         if (angle < 0) {
           angle += 180;
         }
+        ROS_ERROR("%f", nextPoint[1]);
         
         targetLineAngle = angle;
-        
-        talker();
       }
-      catch (const out_of_range& e) {
-        ROS_ERROR("Received target line array is empty");
-      }
+      
+      talker();
     }
     
     void locationCallback(const car::Location& message) {

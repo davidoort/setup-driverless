@@ -56,5 +56,6 @@ int main(int argc, char **argv)
   ros::ServiceServer service = n.advertiseService("/track/coneplacer", cone_placer);
 
   ros::spin();
+
   return 0;
 }

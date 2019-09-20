@@ -172,3 +172,25 @@ Next, you could setup github login. Use the following tutorial: https://wiki.jen
 Make sure you setup authorisation groups to prevent that every github user in the world can use our jenkins!
 The SSH-private key of DUT-Builder is must be in a credential named 
 If you change the url, dont forget to update this place: https://github.com/organizations/DUT-Racing/settings/applications/1126788
+
+Matlab must be installed!! This can be done through cli but is a lot easier with a display.
+We do not have a shared DUT matlab license, so someone's student-license should be used. No worries, a license can be activated on many machines at the same time.
+Go into the mathworks matlab license center: https://nl.mathworks.com/licensecenter/licenses/
+Select your license and Download the latest version mathlab. Just install the default way. 
+When given the option to install optinal sub-packges, just choose everything because its better to have too much than too littele (and we don't know what is needed).
+When matlab is working, you need to activate matlab for the root user.
+Open a terminal, assume the root user and run `/usr/local/MATLAB/R2019a/activate_matlab.sh -propertiesFile ~/activate.ini`
+This errors because you need to fill the `~/activate.ini` file like so:
+```
+isSilent=true
+activateCommand=activateOffline
+licenseFile=/root/matlab.lic
+```
+The `/root/matlab.lic` should be downloaded from the mathworks license centre at the button `Install & Activate -> Activate to Retrieve License File`.
+Choose 'Activate a computer'. For the `Host ID` you must set the mac-address which is defined in the jenkins files.
+So the license is bound to a mac-address. But by default, every docker container gets a new unique mac address. 
+To go around this, in every jenkins file the following mac-address is hard-coded: `f4:93:9f:f7:a8:71`. Choose that address as your `Host ID`.
+Set `Computer Login Name` to `root`. `Activation Label` doesnt matter, you can put there whatever you want.
+
+In jenkins the mosek license must be upload. This license is owned by mit, so ask Allen Wang for it.
+Place the license in `/root/mosek/mosek.lic` file.
