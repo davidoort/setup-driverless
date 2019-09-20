@@ -36,7 +36,7 @@ class Controller {
       float velocityError = velocityRef - velocity;
       
       // Proportional control
-      float Kp_yaw = 1.;
+      float Kp_yaw = 2.;
       float Kp_a = 0.5;
       yawRate = Kp_yaw * headingError;
       acceleration = Kp_a * velocityError;
@@ -58,7 +58,6 @@ class Controller {
         if (angle < 0) {
           angle += 180;
         }
-        ROS_ERROR("%f", nextPoint[1]);
         
         targetLineAngle = angle;
       }
