@@ -38,8 +38,9 @@ class Controller {
       // Proportional control
       float Kp_yaw = 2.;
       float Kp_a = 0.5;
-      yawRate = Kp_yaw * headingError;
-      acceleration = Kp_a * velocityError;
+
+      yawRate = max(min(Kp_yaw * headingError,(float)2),(float)-2.0);
+      acceleration = max(min(Kp_a * velocityError,(float)10),(float)-10);
             
       car::Control message;
       message.acceleration = acceleration;
