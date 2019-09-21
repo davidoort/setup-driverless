@@ -19,9 +19,15 @@ using namespace std;
 // =============================================================================================
 
 // these parameters define the design of the camera of the car
+<<<<<<< HEAD
 float fov = M_PI/2; //radians
 float dof = 20; //meters
 float acc = 200; // NOTE: if you decrease the accuracy, you need to increase the max distance for detection
+=======
+int fov = 1.5; //radians
+int dof = 3; //meters
+int acc = 100;
+>>>>>>> Camera_Simulation
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
 class bullet
@@ -41,7 +47,11 @@ public:
             float pointy = (position.location.y + dof*sin(real));
             point_lst.push_back(pointx);
             point_lst.push_back(pointy);
+<<<<<<< HEAD
             ang0 = ang0 + fov/acc;
+=======
+            ang0 = ang0 - (fov/acc);
+>>>>>>> Camera_Simulation
         }
         return point_lst;
     }
