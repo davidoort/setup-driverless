@@ -15,8 +15,7 @@ using namespace std;
 
 // these parameters define the design of the camera of the car
 float fov = M_PI/2; //radians
-float dof = 30; //meters
-float acc = 200; //number of lines
+float dof = 50; //meters
 
 // the class will provide functions to plot the fov and use it to detect the cones in the way
 class car
@@ -24,45 +23,43 @@ class car
 public:
 
     // plotting field of view as an arc of points (returns a list of points)
-    vector<float> activate(float fov, float angle, float dof, float acc, pair <float,float> position)
+    vector<float> activate(float fov, float angle, float dof, pair <float,float> position)
     {
         vector<float> point_lst;
-        float ang0;
-        ang0 = -(fov/2);
-        while(ang0 < fov/2)
-        {
-            float real = angle + ang0;
-            float pointx = (position.first + dof*cos(real));
-            float pointy = (position.second + dof*sin(real));
-            point_lst.push_back(pointx);
-            point_lst.push_back(pointy);
-            ang0 = ang0 + fov/acc;
-        }
+        float ang1 = -fov/2 + angle;
+        float ang2 = fov/2 + angle;
+        float pointx1 = (position.first + dof*cos(ang1));
+        float pointy1 = (position.second + dof*sin(ang1));
+        point_lst.push_back(pointx1);
+        point_lst.push_back(pointy1);
+        float pointx2 = (position.first + dof*cos(ang2));
+        float pointy2 = (position.second + dof*sin(ang2));
+        point_lst.push_back(pointx2);
+        point_lst.push_back(pointy2);
         return point_lst;
     }
 
     // gets the coord of one cone and returns if it is detected or not (returns 1 for "yes" and 0 for "no")
     // NOTE: the print out messages will be reported once the node receives cones positions
-    float detect(float conex, float coney, vector<float> lst, pair <float,float> position, float acc)
-    {
-        float cone_loc[2] = {conex, coney};
-        float ind = 0;
-        float cone_found = 0;
-        while(ind < lst.size())
-        {
-            float p_x = lst[ind];  
-            float p_y = lst[ind+1];                                                                                             
-            float distance = abs((p_y-position.second)*conex - (p_x-position.first)*coney + p_x*position.second - p_y*position.first)/sqrt(pow((p_y-position.second), 2)+pow((p_x-position.first), 2));
-            if(distance < 0.1)
-            {
-                cout << "cone detected" << endl;
-                return 1;
-                break;
-            }
-            ind = ind + 2;
+    float detect(float conex, float coney, vector<float> lst, pair <float,float> position)
+    {       
+        float Area = (position.first*(lst[1]-lst[3]) + lst[0]*(lst[3]-position.second) + lst[2]*(position.second-lst[1]))/2;
+        float sub_area_1 = abs((position.first*(coney-lst[3]) + conex*(lst[3]-position.second) + lst[2]*(position.second-coney))/2);
+        float sub_area_2 = abs((position.first*(coney-lst[1]) + conex*(lst[1]-position.second) + lst[0]*(position.second-coney))/2);
+        float sub_area_3 = abs((lst[0]*(coney-lst[3]) + conex*(lst[3]-lst[1]) + lst[2]*(lst[1]-coney))/2);
+
+        // debugging
+        // cout << Area << endl;
+        // cout << sub_area_1+sub_area_2+sub_area_3 << endl;
+        // cout << Area-sub_area_1-sub_area_2-sub_area_3 << endl;
+
+        if(abs(Area-sub_area_1-sub_area_2-sub_area_3) < 0.1){
+            cout << "cone detected" << endl;
+            return 1;
+        } else {
+            cout << "cone not detected" << endl;
+            return 0;
         }
-        cout << "cone not detected" << endl;
-        return 0;
     }
 };
 
@@ -78,8 +75,8 @@ int main(int argc, char **argv)
     car dut;
 
     // get fov and use it to get the detection statement
-    vector<float> view_lst = dut.activate(fov, orientation, dof, acc, position);
-    float detection = dut.detect(cones[0], cones[1], view_lst, position, acc);
+    vector<float> view_lst = dut.activate(fov, orientation, dof, position);
+    float detection = dut.detect(cones[0], cones[1], view_lst, position);
 
     // store information of the point to cone_loc.txt
     std::ofstream file;

@@ -31,17 +31,16 @@ public:
     vector<float> activate(float fov, float dof, float acc, car::Location position)
     {
         vector<float> point_lst;
-        float ang0;
-        ang0 = -(fov/2);
-        while(ang0 < fov/2)
-        {
-            float real = position.heading + ang0;
-            float pointx = (position.location.x + dof*cos(real));
-            float pointy = (position.location.y + dof*sin(real));
-            point_lst.push_back(pointx);
-            point_lst.push_back(pointy);
-            ang0 = ang0 + fov/acc;
-        }
+        float ang1 = -fov/2 + position.heading;
+        float ang2 = fov/2 + position.heading;
+        float pointx1 = (position.location.x + dof*cos(ang1));
+        float pointy1 = (position.location.y + dof*sin(ang1));
+        point_lst.push_back(pointx1);
+        point_lst.push_back(pointy1);
+        float pointx2 = (position.location.x + dof*cos(ang2));
+        float pointy2 = (position.location.y + dof*sin(ang2));
+        point_lst.push_back(pointx2);
+        point_lst.push_back(pointy2);
         return point_lst;
     }
 
@@ -49,24 +48,18 @@ public:
     // NOTE: the print out messages will be reported once the node receives cones positions
     bool detect(track::Cone cone, vector<float> lst, car::Location position, float acc)
     {
-        float cone_loc[2] = {cone.position.x, cone.position.y};
-        float ind = 0;
-        float cone_found = 0;
-        while(ind < lst.size())
-        {
-            float p_x = lst[ind];
-            float p_y = lst[ind+1];
-            float distance = abs((p_y-position.location.y)*cone.position.x - (p_x-position.location.x)*cone.position.y + p_x*position.location.y - p_y*position.location.x)/sqrt(pow((p_y-position.location.y), 2)+pow((p_x-position.location.x), 2));
-            if(distance < 0.1)
-            {        
-                cout << "cone detected" << endl;
-                return true;
-                break;
-            } 
-            ind = ind + 2;
+        float Area = (position.location.x*(lst[1]-lst[3]) + lst[0]*(lst[3]-position.location.y) + lst[2]*(position.location.y-lst[1]))/2;
+        float sub_area_1 = abs((position.location.x*(cone.position.y-lst[3]) + cone.position.x*(lst[3]-position.location.y) + lst[2]*(position.location.y-cone.position.y))/2);
+        float sub_area_2 = abs((position.location.x*(cone.position.y-lst[1]) + cone.position.x*(lst[1]-position.location.y) + lst[0]*(position.location.y-cone.position.y))/2);
+        float sub_area_3 = abs((lst[0]*(cone.position.y-lst[3]) + cone.position.x*(lst[3]-lst[1]) + lst[2]*(lst[1]-cone.position.y))/2);
+
+        if(abs(Area-sub_area_1-sub_area_2-sub_area_3) < 0.1){
+            cout << "cone detected" << endl;
+            return 1;
+        } else {
+            cout << "cone not detected" << endl;
+            return 0;
         }
-        cout << "cone not detected" << endl;
-        return false;
     }
 };
 
@@ -89,7 +82,7 @@ void carstateCallback(const car::Location& msg_car)
             detected_cones.cones.push_back(cone);
         }
     } 
-    ROS_INFO("SEnding position of all the detected cones");  
+    ROS_INFO("Sending position of all the detected cones");  
     camera_pub.publish(detected_cones);
 }
 
