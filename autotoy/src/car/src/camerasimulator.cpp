@@ -11,23 +11,16 @@ using namespace std;
 // author: Pietro Campolucci
 // funtion: the code gathers the location of the car
 // and of the cones and publishes the recognized cones
-//
-
+// 
 // what it publishes: track::Cones through topic visible_cones
 // what it subscribe: track::Cones from /track/cones (list of cones, only on time)
 //                    car::Location from /car/location (current car position, multiple times)
 // =============================================================================================
 
 // these parameters define the design of the camera of the car
-<<<<<<< HEAD
 float fov = M_PI/2; //radians
-float dof = 20; //meters
+float dof = 30; //meters
 float acc = 200; // NOTE: if you decrease the accuracy, you need to increase the max distance for detection
-=======
-int fov = 1.5; //radians
-int dof = 3; //meters
-int acc = 100;
->>>>>>> Camera_Simulation
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
 class bullet
@@ -39,19 +32,15 @@ public:
     {
         vector<float> point_lst;
         float ang0;
-        ang0 = +(fov/2);
-        while(ang0 > -fov/2)
+        ang0 = -(fov/2);
+        while(ang0 < fov/2)
         {
             float real = position.heading + ang0;
             float pointx = (position.location.x + dof*cos(real));
             float pointy = (position.location.y + dof*sin(real));
             point_lst.push_back(pointx);
             point_lst.push_back(pointy);
-<<<<<<< HEAD
             ang0 = ang0 + fov/acc;
-=======
-            ang0 = ang0 - (fov/acc);
->>>>>>> Camera_Simulation
         }
         return point_lst;
     }
