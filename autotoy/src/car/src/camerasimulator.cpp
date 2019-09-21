@@ -20,7 +20,6 @@ using namespace std;
 // these parameters define the design of the camera of the car
 float fov = M_PI/2; //radians
 float dof = 30; //meters
-float acc = 200; // NOTE: if you decrease the accuracy, you need to increase the max distance for detection
 
 // this class will get the position of the car and a list of cones, and will report a list of detected cones
 class bullet
@@ -28,7 +27,7 @@ class bullet
 public:
 
     // plotting field of view as an arc of points (returns a list of points)
-    vector<float> activate(float fov, float dof, float acc, car::Location position)
+    vector<float> activate(float fov, float dof, car::Location position)
     {
         vector<float> point_lst;
         float ang1 = -fov/2 + position.heading;
@@ -46,7 +45,7 @@ public:
 
     // gets the coord of one cone and returns if it is detected or not (returns 1 for "yes" and 0 for "no")
     // NOTE: the print out messages will be reported once the node receives cones positions
-    bool detect(track::Cone cone, vector<float> lst, car::Location position, float acc)
+    bool detect(track::Cone cone, vector<float> lst, car::Location position)
     {
         float Area = (position.location.x*(lst[1]-lst[3]) + lst[0]*(lst[3]-position.location.y) + lst[2]*(position.location.y-lst[1]))/2;
         float sub_area_1 = abs((position.location.x*(cone.position.y-lst[3]) + cone.position.x*(lst[3]-position.location.y) + lst[2]*(position.location.y-cone.position.y))/2);
@@ -70,13 +69,13 @@ track::Cones cones_lst;
 void carstateCallback(const car::Location& msg_car)
 {
     bullet dut;
-    vector<float> view_lst = dut.activate(fov, dof, acc, msg_car);
+    vector<float> view_lst = dut.activate(fov, dof, msg_car);
     ROS_INFO("New car position, detecting new cones...");
 
     track::Cones detected_cones;
 
     for(const track::Cone& cone : cones_lst.cones){
-        bool detection = dut.detect(cone, view_lst, msg_car, acc);
+        bool detection = dut.detect(cone, view_lst, msg_car);
         if(detection)
         {
             detected_cones.cones.push_back(cone);
