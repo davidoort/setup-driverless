@@ -36,7 +36,7 @@ class Controller {
       float velocityError = velocityRef - velocity;
       
       // Proportional control
-      float Kp_yaw = 2.;
+      float Kp_yaw = 0.5;
       float Kp_a = 0.5;
 
       yawRate = max(min(Kp_yaw * headingError,(float)2),(float)-2.0);
