@@ -12,6 +12,7 @@ find_package(
   roscpp
   std_msgs
   track
+  car
   visualization_msgs
 )
 
