@@ -96,8 +96,6 @@ public:
   line_strip.id = 1;
 
   points.type = visualization_msgs::Marker::POINTS;
-  // points.type = visualization_msgs::Marker::MESH_RESOURCE;
-  // points.mesh_resource = "package://simulation/meshes/cone_blue.dae";
   line_strip.type = visualization_msgs::Marker::LINE_STRIP;
 
   points.scale.x = 0.2;
@@ -240,7 +238,7 @@ public:
     yaw_vis_pub.publish(yaw_arrow);
     ROS_INFO("Updated car location!");
 
-    //sleep(3); 
+  
   }
 
   void controlCommandReceived(const car::Control& control)
@@ -264,8 +262,6 @@ public:
     
 
     cones.type = visualization_msgs::Marker::POINTS;
-    // points.type = visualization_msgs::Marker::MESH_RESOURCE;
-    // points.mesh_resource = "package://simulation/meshes/cone_blue.dae";
 
     cones.scale.x = 0.4;
     cones.scale.y = 0.4;
@@ -276,7 +272,6 @@ public:
     cones.lifetime = ros::Duration();
     int size = visible_cones.cones.size();
     for (int i=0; i<size; i++){
-    //ROS_INFO("%f, %f, %i", cones.cones[i].position.x, cones.cones[i].position.y, cones.cones[i].color);
 
     geometry_msgs::Point p;
     std_msgs::ColorRGBA pc;
@@ -344,10 +339,6 @@ public:
 
 
 
-
-
-
-
 int main(int argc, char **argv)
 {
   // Initialize ROS; name of the node: "visualize_track"
@@ -363,8 +354,6 @@ int main(int argc, char **argv)
   tie(centerline, cones) = simulator.getTrack(simulator.n);
 
   simulator.publish_Cones(simulator.n, cones, centerline);
-
-  //ros::Publisher car_pub = n.advertise<visualization_msgs::Marker>("car_visualization", 100);
 
   // Initialize publishers and subscribers
   simulator.car_velocity_pub = simulator.n.advertise<car::Velocity>("car/velocity", 100);
