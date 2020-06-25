@@ -1,5 +1,8 @@
 # Driverless DEMOs
 
+## Autotoy Project
+This 2-week project will teach you how to write a vanilla autonomous system using ROS and test it in simulation. Find the documentation for this project [here](autotoy/readme.md).
+
 ## Setup workstation
 
 ### Setup Linux (dual-boot)
